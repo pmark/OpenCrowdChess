@@ -48,7 +48,7 @@ const Main = React.createClass({
     return (
       <div style={containerStyle}>
         <AppBar
-          title="The chess chief is: Johnny Knight"
+          title="The chess boss is: Johnny Knight"
           showMenuIconButton={false}
           iconClassNameRight="muidocs-icon-navigation-expand-more" />
 
