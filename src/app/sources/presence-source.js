@@ -1,5 +1,8 @@
-const DB_URL = 'https://opencrowdchess.firebaseio.com/';
+const suffix = (process.env.NODE_ENV !== 'production' ? '-dev' : '');
+const DB_URL = `https://opencrowdchess${suffix}.firebaseio.com/`;
 import UUID from './uuid-source';
+
+console.log("firebase DB URL:", DB_URL);
 
 const PresenceSource = {
   _activeUserCache: {},
@@ -115,7 +118,7 @@ const PresenceSource = {
     PresenceSource.activeUsersRef().off();
     PresenceSource.activeUsersRef().on('child_removed', function(snapshot) {
       console.log("activeUsers child removed:", snapshot.key(), snapshot.val());
-      PresenceSource._activeUserCache[snapshot.key()] = null;
+      delete(PresenceSource._activeUserCache[snapshot.key()]);
       cb(PresenceSource.generatePresence());
     });
     PresenceSource.activeUsersRef().on('child_added', function(snapshot) {
@@ -124,7 +127,7 @@ const PresenceSource = {
       cb(PresenceSource.generatePresence());
     });
     PresenceSource.activeUsersRef().on('child_changed', function(snapshot) {
-      console.log("activeUsers child added:", snapshot.key(), snapshot.val());
+      console.log("activeUsers child changed:", snapshot.key(), snapshot.val());
       PresenceSource._activeUserCache[snapshot.key()] = snapshot.val();
       cb(PresenceSource.generatePresence());
     });
@@ -134,6 +137,8 @@ const PresenceSource = {
     let playerCount = 0;
     const users = Object.keys(PresenceSource._activeUserCache);
     const totalCount = users.length;
+    console.log(`${totalCount} active users: ${users}`);
+
     users.forEach((uuid) => {
       let isPlayer = PresenceSource._activeUserCache[uuid];
       if (isPlayer) {

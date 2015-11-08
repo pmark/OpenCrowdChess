@@ -4,14 +4,16 @@ const PresenceSource = require('../sources/presence-source');
 class PresenceActions {
 
   constructor() {
-    PresenceSource.connect();
   }
 
   updatePresence(presence) {
+    console.log("updatePresence dispatching", presence);
     this.dispatch(presence);
   }
 
   fetchPresence() {
+    PresenceSource.connect();
+
     // we dispatch an event here so we can have "loading" state.
     this.dispatch();
 
@@ -19,7 +21,8 @@ class PresenceActions {
     PresenceSource.fetch()
     .then((presence) => {
         // we can access other actions within our action through `this.actions`
-        this.actions.updatePresence(presence);
+        // console.log("Fetched presence:", presence);
+        this.actions.updatePresence(PresenceSource.generatePresence());
 
       })
     .catch((errorMessage) => {

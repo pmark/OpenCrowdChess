@@ -42,7 +42,12 @@ var config = {
     //Moves files
     new TransferWebpackPlugin([
       {from: 'www'}
-    ], path.resolve(__dirname, "src"))
+    ], path.resolve(__dirname, "src")),
+    new webpack.DefinePlugin({
+      'process.env': {
+        'NODE_ENV': '"development"'
+      }
+    }),
   ],
   module: {
     //Loaders to interpret non-vanilla javascript code as well as most other extensions including images and text.
@@ -69,5 +74,6 @@ var config = {
     configFile: '.eslintrc'
   },
 };
+
 
 module.exports = config;
