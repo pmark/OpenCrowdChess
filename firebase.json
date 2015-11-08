@@ -1,0 +1,9 @@
+{
+  "firebase": "opencrowdchess",
+  "public": "build",
+  "ignore": [
+    "firebase.json",
+    "**/.*",
+    "**/node_modules/**"
+  ]
+}

@@ -1,4 +1,4 @@
-const DB_URL = 'https://flickering-heat-391.firebaseio.com/';
+const DB_URL = 'https://opencrowdchess.firebaseio.com/';
 import UUID from './uuid-source';
 
 const PresenceSource = {
