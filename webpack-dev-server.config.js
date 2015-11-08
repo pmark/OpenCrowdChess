@@ -9,11 +9,16 @@ var config = {
   entry: [
     'webpack/hot/dev-server',
     'webpack/hot/only-dev-server',
-    path.join(__dirname, '/src/app/app.jsx')
+    path.join(__dirname, '/src/app/app.jsx'),
   ],
   //Config options on how to interpret requires imports
   resolve: {
-    extensions: ["", ".js", ".jsx"]
+    extensions: ["", ".js", ".jsx"],
+    modulesDirectories: [
+      // path.join(__dirname, '/src/lib'),
+      'node_modules',
+      path.join(__dirname, '/src/app')
+    ]
     //node_modules: ["web_modules", "node_modules"]  (Default Settings)
   },
   //Server Configuration options

@@ -1,1 +1,0 @@
-../../../bower_components/chessboard-js/js/chessboard.js

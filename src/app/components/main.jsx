@@ -7,6 +7,7 @@ const Dialog = require('material-ui/lib/dialog');
 const ThemeManager = require('material-ui/lib/styles/theme-manager');
 const LightRawTheme = require('material-ui/lib/styles/raw-themes/light-raw-theme');
 const Colors = require('material-ui/lib/styles/colors');
+const Presence = require('./presence');
 
 const Main = React.createClass({
 
@@ -50,7 +51,7 @@ const Main = React.createClass({
 
         <div id={"board"} style={{width: '35%', marginTop:'10px'}}></div>
 
-        <h1>25 watchers, 12 players</h1>
+        <Presence />
         <h2>Move a piece to start playing.</h2>
 
         <RaisedButton label="Button" primary={true} onTouchTap={this._handleTouchTap} />
