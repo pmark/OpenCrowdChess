@@ -16,7 +16,7 @@ var config = {
     extensions: ["", ".js", ".jsx"],
     modulesDirectories: [
       // path.join(__dirname, '/src/lib'),
-      'node_modules',
+      nodeModulesPath,
       path.join(__dirname, '/src/app')
     ]
     //node_modules: ["web_modules", "node_modules"]  (Default Settings)

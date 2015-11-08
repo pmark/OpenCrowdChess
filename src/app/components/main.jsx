@@ -8,6 +8,9 @@ const ThemeManager = require('material-ui/lib/styles/theme-manager');
 const LightRawTheme = require('material-ui/lib/styles/raw-themes/light-raw-theme');
 const Colors = require('material-ui/lib/styles/colors');
 const Presence = require('./presence');
+const UUID = require('../sources/uuid-source');
+
+console.log("uuid:", UUID.get());
 
 const Main = React.createClass({
 

@@ -6,21 +6,29 @@ const List = require('material-ui/lib/lists/list');
 const ListItem = require('material-ui/lib/lists/list-item');
 const IconPeople = require('material-ui/lib/svg-icons/social/people');
 const IconPeopleOutline = require('material-ui/lib/svg-icons/social/people-outline');
+const PresenceStore = require('../stores/presence-store');
+const PresenceActions = require('../actions/presence-actions');
 
 const Presence = React.createClass({
 
   getInitialState () {
-    return {
-      players: 0,
-      watchers: 0,
-    };
+    return PresenceStore.getState();
+  },
+
+  componentDidMount() {
+    PresenceActions.fetchPresence();
   },
 
   componentWillMount() {
-    // this.setState({
-    //   players: 0,
-    //   watchers: 1,
-    // });
+    PresenceStore.listen(this.onChange);
+  },
+
+  componentWillUnmount() {
+    PresenceStore.unlisten(this.onChange);
+  },
+
+  onChange(store) {
+    this.setState(store.presence);
   },
 
   render() {
@@ -33,8 +41,8 @@ const Presence = React.createClass({
     return (
       <Card.Card>
         <List style={{width: '200px', textAlign: 'left', float: 'left'}}>
-          <ListItem primaryText={`${this.state.players} Players`} leftIcon={<IconPeople />} />
-          <ListItem primaryText={`${this.state.watchers} Watchers`} leftIcon={<IconPeopleOutline />} />
+          <ListItem primaryText={`${this.state.players} players`} leftIcon={<IconPeople />} />
+          <ListItem primaryText={`${this.state.watchers} watchers`} leftIcon={<IconPeopleOutline />} />
         </List>
       </Card.Card>
     );
