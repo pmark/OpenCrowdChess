@@ -47,7 +47,7 @@ const PresenceSource = {
           totalCount = totalCount + 1;
         });
 
-        presenceData = { players: playerCount, watchers: (totalCount-playerCount) };
+        presenceData = { players: playerCount, spectators: (totalCount-playerCount) };
         resolve(presenceData);
       });
 
@@ -146,7 +146,7 @@ const PresenceSource = {
       }
     });
 
-    return { players: playerCount, watchers: (totalCount-playerCount) };
+    return { players: playerCount, spectators: (totalCount-playerCount) };
   },
 };
 

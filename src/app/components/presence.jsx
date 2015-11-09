@@ -28,23 +28,18 @@ const Presence = React.createClass({
   },
 
   onChange(store) {
-    this.setState(store.presence);
+    this.setState(store);
   },
 
   render() {
-
-    let containerStyle = {
-      textAlign: 'center',
-      paddingTop: '10px',
-    };
-
+    const players = this.state.presence.players;
+    const spectators = this.state.presence.spectators;
+  
     return (
-      <Card.Card>
-        <List style={{width: '200px', textAlign: 'left', float: 'left'}}>
-          <ListItem primaryText={`${this.state.players} players`} leftIcon={<IconPeople />} />
-          <ListItem primaryText={`${this.state.watchers} watchers`} leftIcon={<IconPeopleOutline />} />
-        </List>
-      </Card.Card>
+      <List style={{textAlign: 'left'}}>
+        <ListItem primaryText={`${players} player${players === 1 ? '' : 's'}`} leftIcon={<IconPeople />} />
+        <ListItem primaryText={`${spectators} spectator${spectators === 1 ? '' : 's'}`} leftIcon={<IconPeopleOutline />} />
+      </List>
     );
   },
 

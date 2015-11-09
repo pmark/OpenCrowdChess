@@ -5,7 +5,7 @@ class PresenceStore {
   constructor() {
     this.presence = {
       players: 0,
-      watchers: 0,
+      spectators: 0,
     };
 
     this.bindListeners({
@@ -24,7 +24,7 @@ class PresenceStore {
   handleFetchPresence() {
     // reset the array while we're fetching so React can
     // be smart and render a spinner for us since the data is empty.
-    this.presence = {};
+    this.presence = {players: '?', watchers: '?'};
   }
 
   handlePresenceFailed(errorMessage) {
