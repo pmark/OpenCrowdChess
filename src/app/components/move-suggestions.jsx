@@ -24,8 +24,8 @@ const MoveSuggestions = React.createClass({
   componentWillUnmount() {
   },
 
-  onRowSelection(a, b) {
-    console.log("onRowSelection", a, b);
+  onRowSelection(indexes) {
+    console.log("onRowSelection", indexes[0]);
   },
 
   render() {
@@ -37,7 +37,7 @@ const MoveSuggestions = React.createClass({
         height={this.props.height}
         fixedHeader={true}
         fixedFooter={true}
-        selectable={false}
+        selectable={true}
         multiSelectable={false}
         className='centered-table-text'
         onRowSelection={this.onRowSelection}>
