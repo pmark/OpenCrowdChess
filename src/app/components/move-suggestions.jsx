@@ -9,7 +9,7 @@ const TableHeaderColumn = require('material-ui/lib/table/table-header-column');
 const TableRow = require('material-ui/lib/table/table-row');
 const TableRowColumn = require('material-ui/lib/table/table-row-column');
 
-const TurnHistory = React.createClass({
+const MoveSuggestions = React.createClass({
 
   getInitialState () {
     return { turns: [] };
@@ -29,6 +29,9 @@ const TurnHistory = React.createClass({
   },
 
   render() {
+
+    const center = {textAlign: 'center'};
+
     return (
       <Table
         height={this.props.height}
@@ -41,13 +44,10 @@ const TurnHistory = React.createClass({
         <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
           <TableRow>
             <TableHeaderColumn>
-              Turn
+              Votes
             </TableHeaderColumn>
             <TableHeaderColumn>
-              White
-            </TableHeaderColumn>
-            <TableHeaderColumn>
-              Black
+              Move
             </TableHeaderColumn>
            </TableRow>
         </TableHeader>
@@ -57,14 +57,24 @@ const TurnHistory = React.createClass({
           displayRowCheckbox={false}
           stripedRows={true}>
           <TableRow selected={false}>
-            <TableRowColumn>1</TableRowColumn>
+            <TableRowColumn>25</TableRowColumn>
             <TableRowColumn>e4</TableRowColumn>
-            <TableRowColumn>c5</TableRowColumn>
           </TableRow>
           <TableRow>
-            <TableRowColumn>2</TableRowColumn>
+            <TableRowColumn>14</TableRowColumn>
             <TableRowColumn>Nf3</TableRowColumn>
-            <TableRowColumn>d6</TableRowColumn>
+          </TableRow>
+          <TableRow>
+            <TableRowColumn>10</TableRowColumn>
+            <TableRowColumn>a6</TableRowColumn>
+          </TableRow>
+          <TableRow>
+            <TableRowColumn>10</TableRowColumn>
+            <TableRowColumn>a6</TableRowColumn>
+          </TableRow>
+          <TableRow>
+            <TableRowColumn>10</TableRowColumn>
+            <TableRowColumn>a6</TableRowColumn>
           </TableRow>
         </TableBody>
       </Table>  
@@ -73,4 +83,4 @@ const TurnHistory = React.createClass({
 
 });
 
-module.exports = TurnHistory;
+module.exports = MoveSuggestions;

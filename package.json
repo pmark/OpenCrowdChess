@@ -1,10 +1,10 @@
 {
-  "name": "material-ui-example",
-  "version": "0.8.0",
-  "description": "Sample project that uses material-ui",
+  "name": "open-crowd-chess",
+  "version": "0.1.0",
+  "description": "Crowd vs single chess player",
   "repository": {
     "type": "git",
-    "url": "https://github.com/callemall/material-ui.git"
+    "url": "https://github.com/pmark/OpenCrowdChess.git"
   },
   "scripts": {
     "start": "webpack-dev-server --config webpack-dev-server.config.js --progress --inline --colors",
@@ -33,6 +33,8 @@
     "react-addons-transition-group": "^0.14.0",
     "react-addons-update": "^0.14.0",
     "react-dom": "^0.14.0",
+    "react-motion": "^0.3.1",
+    "react-swipeable-views": "^0.3.2",
     "react-tap-event-plugin": "^0.2.1",
     "uuid": "^2.0.1"
   }

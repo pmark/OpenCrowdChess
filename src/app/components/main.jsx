@@ -4,11 +4,16 @@ const React = require('react');
 const RaisedButton = require('material-ui/lib/raised-button');
 const AppBar = require('material-ui/lib/app-bar');
 const Dialog = require('material-ui/lib/dialog');
+const Tabs = require('material-ui/lib/tabs/tabs');
+const Tab = require('material-ui/lib/tabs/tab');
+const Paper = require('material-ui/lib/paper');
+const SwipeableViews = require('react-swipeable-views');
 const ThemeManager = require('material-ui/lib/styles/theme-manager');
 const LightRawTheme = require('material-ui/lib/styles/raw-themes/light-raw-theme');
 const Colors = require('material-ui/lib/styles/colors');
 const Presence = require('./presence');
 const TurnHistory = require('./turn-history');
+const MoveSuggestions = require('./move-suggestions');
 const Clock = require('./clock');
 const Card = require('material-ui/lib/card');
 const UUID = require('../sources/uuid-source');
@@ -24,6 +29,7 @@ const Main = React.createClass({
   getInitialState () {
     return {
       muiTheme: ThemeManager.getMuiTheme(LightRawTheme),
+      tabIndex: 0,
     };
   },
 
@@ -41,17 +47,31 @@ const Main = React.createClass({
     this.setState({muiTheme: newMuiTheme});
   },
 
+  _handleChangeIndex(arg) {
+    console.log('_handleChangeIndex', arg);
+  },
+
+  _handleChangeTabs(arg) {
+    console.log('_handleChangeTabs', arg, "this.state.tabIndex:", this.state.tabIndex);
+    this.setState({ tabIndex: parseInt(arg, 10) });
+  },
+
   render() {
 
-    let containerStyle = {
+    const containerStyle = {
       textAlign: 'center',
       paddingTop: '10px',
     };
 
+    const tabContentStyle = {
+    };
+
+    const tabContentHeight = '180px';
+
     return (
       <div className="container" style={containerStyle}>
         <div className="row">
-          <div className="col-sm-offset-1 col-sm-10">
+          <div className="col-sm-12">
             <AppBar
               title="Crowd vs. Johnny Knight"
               showMenuIconButton={false}
@@ -65,8 +85,26 @@ const Main = React.createClass({
             <div id={"board"} style={{width: '80%', marginTop:'8px', marginBottom:'8px'}}></div>
             <Clock playerName="The crowd" />
           </div>
-          <div className="col-sm-4">
-            <TurnHistory />
+
+          <div className="col-sm-4" style={tabContentStyle}>
+            <Paper style={{backgroundColor: '#dfdfdf'}}>
+              <Tabs 
+                  onChange={this._handleChangeTabs} 
+                  inkBarStyle={{backgroundColor: 'black'}}
+                  value={this.state.tabIndex + ''}>
+                <Tab label="History" value="0" />
+                <Tab label="Suggestions" value="1" />
+              </Tabs>
+
+              <SwipeableViews index={this.state.tabIndex} onChangeIndex={this._handleChangeIndex}>
+                <div>
+                  <TurnHistory height={tabContentHeight} />
+                </div>
+                <div>
+                  <MoveSuggestions height={tabContentHeight} />
+                </div>
+              </SwipeableViews>
+            </Paper>
           </div>
         </div>
 

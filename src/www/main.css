@@ -6,3 +6,8 @@ body {
   font-size: 13px;
   line-height: 20px;
 }
+
+table.centered-table-text tr th,
+table.centered-table-text tr td {
+	text-align: center !important;
+}
