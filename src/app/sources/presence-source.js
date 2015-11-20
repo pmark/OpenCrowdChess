@@ -54,6 +54,7 @@ const PresenceSource = {
     });
   },
 
+  /*
   connect() {
     PresenceSource._connectedRef = new Firebase(`${DB_URL}/.info/connected`);
 
@@ -92,7 +93,8 @@ const PresenceSource = {
       }
     });
   },
-
+  */
+ 
   activeUsersRef() {
     if (!PresenceSource._activeUsersRef) {
       PresenceSource._activeUsersRef = new Firebase(DB_URL + 'activeUsers');

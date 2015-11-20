@@ -14,9 +14,10 @@ const Colors = require('material-ui/lib/styles/colors');
 const Presence = require('./presence');
 const TurnHistory = require('./turn-history');
 const MoveSuggestions = require('./move-suggestions');
-const Clock = require('./clock');
 const Card = require('material-ui/lib/card');
 const UUID = require('../sources/uuid-source');
+const Chessboard = require('./chessboard');
+const Scoreboard = require('./scoreboard');
 
 console.log("uuid:", UUID.get());
 
@@ -57,36 +58,23 @@ const Main = React.createClass({
   },
 
   render() {
-
     const containerStyle = {
       textAlign: 'center',
       paddingTop: '10px',
-    };
-
-    const tabContentStyle = {
     };
 
     const tabContentHeight = '180px';
 
     return (
       <div className="container" style={containerStyle}>
-        <div className="row">
-          <div className="col-sm-12">
-            <AppBar
-              title="Crowd vs. Johnny Knight"
-              showMenuIconButton={false}
-              iconClassNameRight="muidocs-icon-navigation-expand-more" />
-          </div>
-        </div>
+        <Scoreboard />
 
         <div className="row" style={{textAlign: 'center', marginTop:'8px'}}>
           <div className="col-sm-offset-1 col-sm-6">
-            <Clock playerName="Johnny Knight" />
-            <div id={"board"} style={{width: '80%', marginTop:'8px', marginBottom:'8px'}}></div>
-            <Clock playerName="The crowd" />
+            <Chessboard />
           </div>
 
-          <div className="col-sm-4" style={tabContentStyle}>
+          <div className="col-sm-4">
             <Paper style={{backgroundColor: '#dfdfdf'}}>
               <Tabs 
                   onChange={this._handleChangeTabs} 

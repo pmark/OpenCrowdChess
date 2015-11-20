@@ -1,9 +1,9 @@
 import uuidlib from 'uuid';
 
-const UUIDx = {
+const UUID = {
 	get() {
 		return window.localStorage.uuid = window.localStorage.uuid || uuidlib.v1();
 	},
 };
 
-export default UUIDx; 
+export default UUID;
