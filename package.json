@@ -2,6 +2,7 @@
   "name": "open-crowd-chess",
   "version": "0.1.0",
   "description": "Crowd vs single chess player",
+  "license": "ISC",
   "repository": {
     "type": "git",
     "url": "https://github.com/pmark/OpenCrowdChess.git"
