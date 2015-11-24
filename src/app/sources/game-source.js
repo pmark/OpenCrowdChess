@@ -5,6 +5,7 @@ console.log("firebase FirebaseDB URL:", FirebaseDB.url);
 
 const GameSource = {
   _currentGame: null,
+  _currentGameId: null,
   _currentGameRef: null,
   _gamesRef: null,
 
@@ -25,11 +26,10 @@ const GameSource = {
       return new Promise(function(resolve, reject) {
         FirebaseDB.ref.child('currentGameId').once('value', function(snapshot) {  
           if (snapshot.exists()) {
-            const currentGameId = snapshot.val();
-            console.log('Got currentGameId:', currentGameId);
+            GameSource._currentGameId = snapshot.val();
+            console.log('Got currentGameId:', GameSource._currentGameId);
 
-            GameSource._currentGameRef = GameSource.gamesRef().child(currentGameId);
-            GameSource._currentGameRef.once('value', function(snapshot) {  
+            GameSource.currentGameRef().once('value', function(snapshot) {  
               GameSource._currentGame = snapshot.val();
               console.log('Got current game:', GameSource._currentGame);
               resolve(GameSource._currentGame);
@@ -39,8 +39,8 @@ const GameSource = {
             console.log("currentGameId dne")
 
             if (!GameSource._currentGameId) {
-              const gameRef = GameSource.gamesRef().push({ createdAt: Firebase.ServerValue.TIMESTAMP })
-              GameSource._currentGameId = gameRef.key();
+              const firstGameRef = GameSource.gamesRef().push({ createdAt: Firebase.ServerValue.TIMESTAMP })
+              GameSource._currentGameId = firstGameRef.key();
               FirebaseDB.ref.child('currentGameId').set(GameSource._currentGameId);
               console.log('GameSource.getCurrentGame recursing with game ID:', GameSource._currentGameId);
               return GameSource.getCurrentGame();            
@@ -54,57 +54,11 @@ const GameSource = {
     }
   },
 
-  getCurrentGameRef() {
+  currentGameRef() {
     if (!GameSource._currentGameRef) {
-
-      if (!_currentGame) {
-      }
-      else {
-        return new Promise(function(resolve, reject) {
-          resolve(GameSource._currentGameRef = GameSource.gamesRef().child(_currentGame.id))
-        })
-      }
+      GameSource._currentGameRef = new Firebase(`${FirebaseDB.url}/games/${GameSource._currentGameId}`);
     }
     return GameSource._currentGameRef;
-  },
-
-  fetch() {
-    return new Promise(function(resolve, reject) {
-      let gameData = null;
-
-      GameSource.activeUsersRef().once('value', function(snapshot) {
-          
-        snapshot.forEach((childSnapshot) => {
-          let uuid = childSnapshot.key();
-          let isPlayer = childSnapshot.val();
-          GameSource._activeUserCache[uuid] = isPlayer;
-
-          if (isPlayer) {
-            playerCount = playerCount + 1;
-          }
-
-          totalCount = totalCount + 1;
-        });
-
-        gameData = { players: playerCount, spectators: (totalCount-playerCount) };
-        resolve(gameData);
-      });
-
-    });
-  },
-
-  activeUsersRef() {
-    if (!GameSource._activeUsersRef) {
-      GameSource._activeUsersRef = new Firebase(FirebaseDB.url + 'activeUsers');
-    }
-    return GameSource._activeUsersRef;
-  },
-
-  gameRef() {
-    if (!GameSource._gameRef) {
-      GameSource._gameRef = new Firebase(`${FirebaseDB.url}/activeUsers/${UUID.get()}`);
-    }
-    return GameSource._gameRef;
   },
 
 };
