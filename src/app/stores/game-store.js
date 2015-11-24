@@ -9,12 +9,7 @@ class GameStore {
       crowdPlayers: [],
     };
 
-    this.bindActions();
-    // this.bindListeners({
-    //   handleUpdateGame: GameActions.UPDATE_GAME,
-    //   handleFetchCurrentGame: GameActions.FETCH_CURRENT_GAME,
-    //   handleFetchGameFailed: GameActions.FETCH_GAME_FAILED,
-    // });
+    this.bindActions(GameActions);
   }
 
   onUpdateGame(game) {
@@ -33,5 +28,7 @@ class GameStore {
     this.errorMessage = errorMessage;
   }
 }
+
+GameActions.fetchCurrentGame();
 
 module.exports = alt.createStore(GameStore, 'GameStore');

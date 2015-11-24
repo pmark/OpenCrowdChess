@@ -10,7 +10,7 @@ const GameSource = {
 
   gamesRef() {
     if (!GameSource._gamesRef) {
-      GameSource._gamesRef = FirebaseDB.ref().child('games');
+      GameSource._gamesRef = FirebaseDB.ref.child('games');
     }
     return GameSource._gamesRef;
   },
@@ -22,13 +22,33 @@ const GameSource = {
       })
     }
     else {
-      FirebaseDB.ref().child('currentGameId').once('value', function(snapshot) {  
-        return snapshot.val();
-      })
-      .then(function(id) {
-        GameSource._currentGameRef = GameSource.gamesRef().child(id);
-        GameSource._currentGameRef.once('value', function(snapshot) {  
-          _currentGame = snapshot.val();
+      return new Promise(function(resolve, reject) {
+        FirebaseDB.ref.child('currentGameId').once('value', function(snapshot) {  
+          if (snapshot.exists()) {
+            const currentGameId = snapshot.val();
+            console.log('Got currentGameId:', currentGameId);
+
+            GameSource._currentGameRef = GameSource.gamesRef().child(currentGameId);
+            GameSource._currentGameRef.once('value', function(snapshot) {  
+              GameSource._currentGame = snapshot.val();
+              console.log('Got current game:', GameSource._currentGame);
+              resolve(GameSource._currentGame);
+            });          
+          }
+          else {
+            console.log("currentGameId dne")
+
+            if (!GameSource._currentGameId) {
+              const gameRef = GameSource.gamesRef().push({ createdAt: Firebase.ServerValue.TIMESTAMP })
+              GameSource._currentGameId = gameRef.key();
+              FirebaseDB.ref.child('currentGameId').set(GameSource._currentGameId);
+              console.log('GameSource.getCurrentGame recursing with game ID:', GameSource._currentGameId);
+              return GameSource.getCurrentGame();            
+            }
+            else {
+              reject("Exception starting first game.");
+            }
+          }
         });
       });
     }
@@ -51,8 +71,7 @@ const GameSource = {
   fetch() {
     return new Promise(function(resolve, reject) {
       let gameData = null;
-      let playerCount = 0;
-      let totalCount = 0;
+
       GameSource.activeUsersRef().once('value', function(snapshot) {
           
         snapshot.forEach((childSnapshot) => {
@@ -74,45 +93,6 @@ const GameSource = {
     });
   },
 
-  connect() {
-    GameSource._connectedRef = new Firebase(`${FirebaseDB.url}/.info/connected`);
-
-    GameSource._connectedRef.on("value", function(isOnline) {
-      if (isOnline.val()) {
-        // If we lose our internet connection, we want ourselves removed from the list.
-        GameSource.gameRef().onDisconnect().remove();
-        console.log("\n\n you're connected \n\n");
-        
-        GameSource.userRef().once("value", function(snapshot) {
-          let userData = null;
-          if (snapshot.exists()) {
-            // We've seen this user before
-            userData = snapshot.val();
-
-          }
-          else {
-            userData = { isPlayer: false, uuid: UUID.get() };
-            GameSource.userRef().set(userData);
-          }
-
-          GameSource.gameRef().set(userData.isPlayer);
-          GameSource._userData = userData;
-
-          GameSource.userRef().on('child_changed', function(snapshot) {
-            GameSource._userData = snapshot.val();
-          });
-        });
-      }
-      else {
-        // We need to catch anytime we are marked as offline and then set the correct status. We
-        // could be marked as offline 1) on page load or 2) when we lose our internet connection
-        // temporarily.
-        console.log("\n\n you went offline \n\n");
-        // GameSource.setUserStatus(GameSource._currentStatus);
-      }
-    });
-  },
-
   activeUsersRef() {
     if (!GameSource._activeUsersRef) {
       GameSource._activeUsersRef = new Firebase(FirebaseDB.url + 'activeUsers');
@@ -127,47 +107,6 @@ const GameSource = {
     return GameSource._gameRef;
   },
 
-  setGameChangeListener(cb) {
-    if (!cb) {
-      throw new Error('Empty callback')
-    }
-    if (typeof(cb) !== 'function') {
-      throw new Error('Invalid callback type: ' + typeof(cb) + ' ' + cb);
-    }
-
-    GameSource.activeUsersRef().off();
-    GameSource.activeUsersRef().on('child_removed', function(snapshot) {
-      console.log("activeUsers child removed:", snapshot.key(), snapshot.val());
-      delete(GameSource._activeUserCache[snapshot.key()]);
-      cb(GameSource.generateGame());
-    });
-    GameSource.activeUsersRef().on('child_added', function(snapshot) {
-      console.log("activeUsers child added:", snapshot.key(), snapshot.val());
-      GameSource._activeUserCache[snapshot.key()] = snapshot.val();
-      cb(GameSource.generateGame());
-    });
-    GameSource.activeUsersRef().on('child_changed', function(snapshot) {
-      console.log("activeUsers child changed:", snapshot.key(), snapshot.val());
-      GameSource._activeUserCache[snapshot.key()] = snapshot.val();
-      cb(GameSource.generateGame());
-    });
-  },
-
-  generateGame() {
-    let playerCount = 0;
-    const users = Object.keys(GameSource._activeUserCache);
-    const totalCount = users.length;
-    console.log(`${totalCount} active users: ${users}`);
-
-    users.forEach((uuid) => {
-      let isPlayer = GameSource._activeUserCache[uuid];
-      if (isPlayer) {
-        playerCount = playerCount + 1;
-      }
-    });
-
-    return { players: playerCount, spectators: (totalCount-playerCount) };
-  },
 };
 
 export default GameSource;

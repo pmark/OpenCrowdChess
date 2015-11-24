@@ -12,7 +12,6 @@ const Chessboard = React.createClass({
   },
 
   componentDidMount() {
-    GameActions.fetchCurrentGame();
   },
 
   componentWillMount() {

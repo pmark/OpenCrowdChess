@@ -12,18 +12,15 @@ class GameActions {
   }
 
   fetchCurrentGame() {
-    GameSource.connect();
+    // GameSource.connect();
 
     // we dispatch an event here so we can have "loading" state.
     this.dispatch();
 
-    GameSource.setGameChangeListener(this.actions.updateGame);
-    GameSource.fetch()
-    .then((game) => {
+    GameSource.getCurrentGame().then((game) => {
         // we can access other actions within our action through `this.actions`
         // console.log("Fetched game:", game);
-        this.actions.updateGame(GameSource.generateGame());
-
+        this.actions.updateGame(game);
       })
     .catch((errorMessage) => {
       this.actions.fetchGameFailed(errorMessage);
@@ -36,6 +33,5 @@ class GameActions {
   }
 };
 
-const altered = alt.createActions(GameActions);
-module.exports = altered;
+export default alt.createActions(GameActions);
 

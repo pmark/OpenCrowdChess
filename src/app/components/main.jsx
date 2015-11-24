@@ -9,6 +9,7 @@ const Tab = require('material-ui/lib/tabs/tab');
 const Paper = require('material-ui/lib/paper');
 const SwipeableViews = require('react-swipeable-views');
 const ThemeManager = require('material-ui/lib/styles/theme-manager');
+// const DarkRawTheme = require('material-ui/lib/styles/raw-themes/dark-raw-theme');
 const LightRawTheme = require('material-ui/lib/styles/raw-themes/light-raw-theme');
 const Colors = require('material-ui/lib/styles/colors');
 const Presence = require('./presence');
@@ -70,7 +71,7 @@ const Main = React.createClass({
         <Scoreboard />
 
         <div className="row" style={{textAlign: 'center', marginTop:'8px'}}>
-          <div className="col-sm-offset-1 col-sm-6">
+          <div className="col-sm-6">
             <Chessboard />
           </div>
 

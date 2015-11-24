@@ -12,7 +12,7 @@ class PresenceActions {
   }
 
   fetchPresence() {
-    PresenceSource.connect();
+    // PresenceSource.connect();
 
     // we dispatch an event here so we can have "loading" state.
     this.dispatch();
