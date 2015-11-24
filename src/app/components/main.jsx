@@ -31,7 +31,7 @@ const Main = React.createClass({
   getInitialState () {
     return {
       muiTheme: ThemeManager.getMuiTheme(LightRawTheme),
-      tabIndex: 0,
+      usersTabIndex: 0,
     };
   },
 
@@ -49,14 +49,24 @@ const Main = React.createClass({
     this.setState({muiTheme: newMuiTheme});
   },
 
-  _handleChangeIndex(arg) {
-    console.log('_handleChangeIndex', arg);
+  _handleChangeMovesTabIndex(arg) {
+    console.log('_handleChangeMovesTabIndex', arg);
   },
 
-  _handleChangeTabs(arg) {
-    console.log('_handleChangeTabs', arg, "this.state.tabIndex:", this.state.tabIndex);
-    this.setState({ tabIndex: parseInt(arg, 10) });
+  _handleChangeMovesTabs(arg) {
+    console.log('_handleChangeMovesTabs', arg, "this.state.movesTabIndex:", this.state.movesTabIndex);
+    this.setState({ movesTabIndex: parseInt(arg, 10) });
   },
+
+  _handleChangeUsersTabIndex(arg) {
+    console.log('_handleChangeUsersTabIndex', arg);
+  },
+
+  _handleChangeUsersTabs(arg) {
+    console.log('_handleChangeUsersTabs', arg, "this.state.usersTabIndex:", this.state.usersTabIndex);
+    this.setState({ usersTabIndex: parseInt(arg, 10) });
+  },
+
 
   render() {
     const containerStyle = {
@@ -71,21 +81,50 @@ const Main = React.createClass({
         <Scoreboard />
 
         <div className="row" style={{textAlign: 'center', marginTop:'8px'}}>
-          <div className="col-sm-6">
+          <div className="col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
             <Chessboard />
           </div>
+        </div>
 
-          <div className="col-sm-4">
-            <Paper style={{backgroundColor: '#dfdfdf'}}>
+        <div className="row">
+          <div className="col-xs-12">
+            <h2>Move a piece to start playing.</h2>
+          </div>
+        </div>
+
+        <div className="row">
+          <div className="col-sm-offset-2 col-sm-4 col-md-offset-3 col-md-3">
+            <Paper style={{backgroundColor: '#dfdfdf', margin: '20px 0'}}>
               <Tabs 
-                  onChange={this._handleChangeTabs} 
+                  onChange={this._handleChangeMovesTabs} 
                   inkBarStyle={{backgroundColor: 'black'}}
-                  value={this.state.tabIndex + ''}>
+                  value={this.state.movesTabIndex + ''}>
                 <Tab label="History" value="0" />
                 <Tab label="Suggestions" value="1" />
               </Tabs>
 
-              <SwipeableViews index={this.state.tabIndex} onChangeIndex={this._handleChangeIndex}>
+              <SwipeableViews index={this.state.movesTabIndex} onChangeIndex={this._handleChangeMovesTabsIndex}>
+                <div>
+                  <TurnHistory height={tabContentHeight} />
+                </div>
+                <div>
+                  <MoveSuggestions height={tabContentHeight} />
+                </div>
+              </SwipeableViews>
+            </Paper>
+          </div>
+
+          <div className="col-sm-4 col-md-3">
+            <Paper style={{backgroundColor: '#dfdfdf', margin: '20px 0'}}>
+              <Tabs 
+                  onChange={this._handleChangeUsersTabs} 
+                  inkBarStyle={{backgroundColor: 'black'}}
+                  value={this.state.usersTabIndex + ''}>
+                <Tab label="Players" value="0" />
+                <Tab label="Spectators" value="1" />
+              </Tabs>
+
+              <SwipeableViews index={this.state.usersTabIndex} onChangeIndex={this._handleChangeUsersTabIndex}>
                 <div>
                   <TurnHistory height={tabContentHeight} />
                 </div>
@@ -97,22 +136,13 @@ const Main = React.createClass({
           </div>
         </div>
 
-        <div className="row">
-          <div className="col-xs-offset-1 col-xs-6">
-            <h2>Move a piece to start playing.</h2>
-          </div>
-          <div className="col-xs-offset-1 col-xs-10">
-            <Presence/>
-          </div>
-        </div>
-
       </div>
     );
   },
 
-  _handleTouchTap() {
-    this.refs.superSecretPasswordDialog.show();
-  },
+  // _handleTouchTap() {
+  //   this.refs.superSecretPasswordDialog.show();
+  // },
 
 });
 

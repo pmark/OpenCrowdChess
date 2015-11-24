@@ -32,26 +32,26 @@ const Scoreboard = React.createClass({
         </div>
 
         <div className="row">
-          <div className="col-xs-3">
-            <Clock />
-          </div>
-          <div className="col-xs-3">
-            <h3>15</h3>
-          </div>
-          <div className="col-xs-3">
-            <h3>3</h3>
-          </div>
-          <div className="col-xs-3">
-            <Clock />
-          </div>
-        </div>
-
-        <div className="row">
           <div className="col-xs-6">
             <Cemetery color='white' />
           </div>
           <div className="col-xs-6">
             <Cemetery color='black' />
+          </div>
+        </div>
+
+        <div className="row">
+          <div className="col-xs-3 col-sm-offset-2 col-sm-2 col-lg-offset-2 col-lg-2">
+            <Clock />
+          </div>
+          <div className="col-xs-3 col-sm-2">
+            <h3>15</h3>
+          </div>
+          <div className="col-xs-3 col-sm-2">
+            <h3>3</h3>
+          </div>
+          <div className="col-xs-3 col-sm-2">
+            <Clock />
           </div>
         </div>
 

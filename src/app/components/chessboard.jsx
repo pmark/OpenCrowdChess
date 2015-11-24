@@ -12,6 +12,7 @@ const Chessboard = React.createClass({
   },
 
   componentDidMount() {
+    // initBoard();
   },
 
   componentWillMount() {
@@ -28,7 +29,7 @@ const Chessboard = React.createClass({
 
   render() {
     return (
-      <div id={"board"} style={{width: '80%', marginTop:'8px', marginBottom:'8px'}}></div>
+      <div id={"board"} style={{width: '85%', marginTop:'8px', marginBottom:'8px'}}></div>
     );
   },
 
@@ -37,23 +38,24 @@ const Chessboard = React.createClass({
 module.exports = Chessboard;
 
 
-
-
-
-
 ////////////////
-/*
-const chess = new Chess();
+// let chess = null;
+// let board = null;
 
-const board = new Chessboard('board', {
-  position: ChessUtils.FEN.startId,
-  eventHandlers: {
-    onPieceSelected: pieceSelected,
-    onMove: pieceMove,
-  },
-});
+function initBoard() {
+  console.log("initBoard")
+  chess = new Chess();
 
-resetGame();
+  board = new Chessboard('board', {
+    position: ChessUtils.FEN.startId,
+    eventHandlers: {
+      onPieceSelected: pieceSelected,
+      onMove: pieceMove,
+    },
+  });
+
+  resetGame();
+}
 
 function resetGame() {
   board.setPosition(ChessUtils.FEN.startId);
@@ -75,7 +77,7 @@ function pieceMove(move) {
     chessMove = chess.move({
       from: move.from,
       to: move.to,
-      promotion: 'q'
+      promotion: 'q',
     });
 
 
@@ -87,9 +89,11 @@ function pieceMove(move) {
   if (chessMove !== null) {
     if (chess.in_checkmate() === true) {
       status = 'CHECKMATE! Player ' + nextPlayer + ' lost.';
-    } else if (chess.in_draw() === true) {
+    }
+    else if (chess.in_draw() === true) {
       status = 'DRAW!';
-    } else {
+    }
+    else {
       status = 'Next player is ' + nextPlayer + '.';
 
       if (chess.in_check() === true) {
@@ -114,4 +118,4 @@ function pieceSelected(notationSquare) {
   }
   return movesPosition;
 }
-*/
+
