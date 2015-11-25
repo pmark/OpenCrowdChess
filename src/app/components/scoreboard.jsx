@@ -32,11 +32,11 @@ const Scoreboard = React.createClass({
         </div>
 
         <div className="row">
-          <div className="col-xs-6">
-            <Cemetery color='white' />
+          <div className="col-xs-6" style={{textAlign: 'right'}}>
+            <Cemetery color='white' taken='q,r,b,n,p' />
           </div>
-          <div className="col-xs-6">
-            <Cemetery color='black' />
+          <div className="col-xs-6" style={{textAlign: 'left'}}>
+            <Cemetery color='black' taken='r,r,b,b,n,n,p,q,q,q,q,q,q,q,q' />
           </div>
         </div>
 

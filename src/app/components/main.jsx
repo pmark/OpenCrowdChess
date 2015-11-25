@@ -7,18 +7,18 @@ const Dialog = require('material-ui/lib/dialog');
 const Tabs = require('material-ui/lib/tabs/tabs');
 const Tab = require('material-ui/lib/tabs/tab');
 const Paper = require('material-ui/lib/paper');
-const SwipeableViews = require('react-swipeable-views');
+const Card = require('material-ui/lib/card');
 const ThemeManager = require('material-ui/lib/styles/theme-manager');
-// const DarkRawTheme = require('material-ui/lib/styles/raw-themes/dark-raw-theme');
 const LightRawTheme = require('material-ui/lib/styles/raw-themes/light-raw-theme');
 const Colors = require('material-ui/lib/styles/colors');
+const SwipeableViews = require('react-swipeable-views');
+
 const Presence = require('./presence');
 const TurnHistory = require('./turn-history');
 const MoveSuggestions = require('./move-suggestions');
-const Card = require('material-ui/lib/card');
-const UUID = require('../sources/uuid-source');
 const Chessboard = require('./chessboard');
 const Scoreboard = require('./scoreboard');
+const UUID = require('../sources/uuid-source');
 
 console.log("uuid:", UUID.get());
 

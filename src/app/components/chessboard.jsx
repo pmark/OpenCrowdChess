@@ -4,6 +4,7 @@ const React = require('react');
 const GameStore = require('../stores/game-store');
 const GameActions = require('../actions/game-actions');
 const Chess = require('../lib/jhlywa-chess').Chess;
+const Paper = require('material-ui/lib/paper');
 
 const Chessboard = React.createClass({
 
