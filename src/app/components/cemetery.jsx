@@ -7,6 +7,8 @@ const Chessmen = require('../lib/unicode-chessmen');
 const Cemetery = React.createClass({
 
   getInitialState () {
+    console.log('Cemetery props:', this.props)
+
     return { };
   },
 
@@ -19,36 +21,47 @@ const Cemetery = React.createClass({
   componentWillUnmount() {
   },
 
+  taken() {
+    return (this.props.taken ? this.props.taken : '');
+  },
+
+  takenCount(pieceType) {
+    let count = 0;
+    this.taken().split(',').forEach(function(p) { count += (p === pieceType) ? 1 : 0; });
+    return count;
+  },
+
+  takenPieceIcons(pieceType) {
+    let html = '';
+    const count = this.takenCount(pieceType);
+    for (let i=0; i < count; i+=1) {
+        html += Chessmen[this.props.color][pieceType];
+    }
+    return html;
+  },
+
   render() {
     return (
-      <h5 style={{marginBottom: '12px'}}>
-        {Chessmen[this.props.color].q}
+      <h6 style={{marginBottom: '12px'}}>
+        <span style={{letterSpacing: '-0.1em'}}>
+          {this.takenPieceIcons('q')}
+        </span>
         <span>
-          {Chessmen[this.props.color].r}
-          {Chessmen[this.props.color].r}
+          {this.takenPieceIcons('r')}
         </span>
 
         <span>
-          {Chessmen[this.props.color].b}
-          {Chessmen[this.props.color].b}
+          {this.takenPieceIcons('b')}
         </span>
 
         <span>
-          {Chessmen[this.props.color].n}
-          {Chessmen[this.props.color].n}
+          {this.takenPieceIcons('n')}
         </span>
 
         <span style={{letterSpacing: '-0.4em'}}>
-          {Chessmen[this.props.color].p}
-          {Chessmen[this.props.color].p}
-          {Chessmen[this.props.color].p}
-          {Chessmen[this.props.color].p}
-          {Chessmen[this.props.color].p}
-          {Chessmen[this.props.color].p}
-          {Chessmen[this.props.color].p}
-          {Chessmen[this.props.color].p}
+          {this.takenPieceIcons('p')}
         </span>
-      </h5>
+      </h6>
     );
   },
 
