@@ -13,14 +13,14 @@ const LightRawTheme = require('material-ui/lib/styles/raw-themes/light-raw-theme
 const Colors = require('material-ui/lib/styles/colors');
 const SwipeableViews = require('react-swipeable-views');
 
+const GameStore = require('../stores/game-store');
+
 const Presence = require('./presence');
 const TurnHistory = require('./turn-history');
 const MoveSuggestions = require('./move-suggestions');
 const Chessboard = require('./chessboard');
 const Scoreboard = require('./scoreboard');
 const UUID = require('../sources/uuid-source');
-
-console.log("uuid:", UUID.get());
 
 const Main = React.createClass({
 
@@ -29,9 +29,12 @@ const Main = React.createClass({
   },
 
   getInitialState () {
+    console.log('GameStore.getState():', GameStore.getState())
+
     return {
       muiTheme: ThemeManager.getMuiTheme(LightRawTheme),
       usersTabIndex: 0,
+      game: GameStore.getState().game,
     };
   },
 
@@ -78,7 +81,7 @@ const Main = React.createClass({
 
     return (
       <div className="container" style={containerStyle}>
-        <Scoreboard />
+        <Scoreboard game={this.state.game} />
 
         <div className="row" style={{textAlign: 'center', marginTop:'8px'}}>
           <div className="col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">

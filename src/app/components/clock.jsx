@@ -6,17 +6,16 @@ const Paper = require('material-ui/lib/paper');
 const Clock = React.createClass({
 
   getInitialState () {
-    return { millis: 71000 };
+    return {
+      millis: this.props.seconds * 1000,
+      running: this.props.running,
+    };
   },
 
   componentDidMount() {
-    setInterval(this.tick, 100);
-  },
-
-  componentWillMount() {
-  },
-
-  componentWillUnmount() {
+    if (this.props.running) {
+      setInterval(this.tick, 100);
+    }
   },
 
   render() {

@@ -3,7 +3,7 @@
 const React = require('react');
 const Paper = require('material-ui/lib/paper');
 const Chessmen = require('../lib/unicode-chessmen');
-
+const ChessUtil = require('../lib/chess-util');
 const Cemetery = React.createClass({
 
   getInitialState () {
@@ -25,15 +25,9 @@ const Cemetery = React.createClass({
     return (this.props.taken ? this.props.taken : '');
   },
 
-  takenCount(pieceType) {
-    let count = 0;
-    this.taken().split(',').forEach(function(p) { count += (p === pieceType) ? 1 : 0; });
-    return count;
-  },
-
   takenPieceIcons(pieceType) {
     let html = '';
-    const count = this.takenCount(pieceType);
+    const count = ChessUtil.takenCount(this.taken(), pieceType);
     for (let i=0; i < count; i+=1) {
         html += Chessmen[this.props.color][pieceType];
     }
