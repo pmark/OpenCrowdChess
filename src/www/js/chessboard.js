@@ -34,8 +34,8 @@ function Chessboard(containerId, config) {
 	*/
 		
 	Chessboard.ANIMATION = {
-		fadeInTime: 1000,
-		fadeOutTime: 1000
+		fadeInTime: 150,
+		fadeOutTime: 150
 	};
 	
 	Chessboard.CSS_PREFIX = 'chess_';
@@ -823,7 +823,7 @@ function Chessboard(containerId, config) {
 	@private
 	@param {Integer} index Index of a square (0-63)
 	@param {String} positionPiece The string representing one piece in the position string.
-	@param {Boolean} isHidden Whether the piece should be placed there as a hidden piece for aimation purposes.
+	@param {Boolean} isHidden Whether the piece should be placed there as a hidden piece for animation purposes.
 	*/
 	drawPiece = function (index, positionPiece, isHidden) {
 		var className = '',
