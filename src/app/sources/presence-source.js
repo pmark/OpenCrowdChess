@@ -2,8 +2,6 @@ const suffix = (process.env.NODE_ENV !== 'production' ? '-dev' : '');
 const DB_URL = `https://opencrowdchess${suffix}.firebaseio.com/`;
 import UUID from './uuid-source';
 
-console.log("firebase DB URL:", DB_URL);
-
 const PresenceSource = {
   _activeUserCache: {},
   _activeUsersRef: null,

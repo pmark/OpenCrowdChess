@@ -1,7 +1,7 @@
 import FirebaseDB from './firebase-db';
 import UUID from './uuid-source';
 
-console.log("firebase FirebaseDB URL:", FirebaseDB.url);
+// console.log("firebase FirebaseDB URL:", FirebaseDB.url);
 
 const GameSource = {
   _currentGame: null,
@@ -27,22 +27,17 @@ const GameSource = {
         FirebaseDB.ref.child('currentGameId').once('value', function(snapshot) {  
           if (snapshot.exists()) {
             GameSource._currentGameId = snapshot.val();
-            console.log('Got currentGameId:', GameSource._currentGameId);
 
             GameSource.currentGameRef().once('value', function(snapshot) {  
               GameSource._currentGame = snapshot.val();
-              console.log('Got current game:', GameSource._currentGame);
               resolve(GameSource._currentGame);
             });          
           }
           else {
-            console.log("currentGameId dne")
-
             if (!GameSource._currentGameId) {
               const firstGameRef = GameSource.gamesRef().push({ createdAt: Firebase.ServerValue.TIMESTAMP })
               GameSource._currentGameId = firstGameRef.key();
               FirebaseDB.ref.child('currentGameId').set(GameSource._currentGameId);
-              console.log('GameSource.getCurrentGame recursing with game ID:', GameSource._currentGameId);
               return GameSource.getCurrentGame();            
             }
             else {

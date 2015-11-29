@@ -1,15 +1,22 @@
-var __chess = new Chess();
+// var __chess = new Chess();
 
-var __board = new Chessboard('board', {
-  position: ChessUtils.FEN.startId,
-  eventHandlers: {
-    onPieceSelected: pieceSelected,
-    onMove: pieceMove
-  }
+var __board = null;
+
+$(function() {
+  console.log("\nDOCUMENT READY\n", window.pieceSelected, window.pieceMoved)
+  __board = new Chessboard('board', {
+    position: ChessUtils.FEN.startId,
+    eventHandlers: {
+      onPieceSelected: window.pieceSelected,
+      onMove: window.pieceMoved
+    }
+  });
+
+  window.resetGame();
 });
 
-resetGame();
 
+/*
 function resetGame() {
   __board.setPosition(ChessUtils.FEN.startId);
   __chess.reset();
@@ -24,7 +31,6 @@ function updateGameInfo(status) {
 }
 
 function pieceMove(move) {
-
   var nextPlayer,
     status,
     chessMove = __chess.move({
@@ -32,7 +38,6 @@ function pieceMove(move) {
       to: move.to,
       promotion: 'q'
     });
-
 
   nextPlayer = 'white';
   if (__chess.turn() === 'b') {
@@ -55,7 +60,17 @@ function pieceMove(move) {
     updateGameInfo(status);      
   }
 
-  return __chess.fen();
+  const fen = __chess.fen();
+  
+  // console.log('chessMove', chessMove)
+  // console.log("fen:", fen)
+  // console.log("position:", __board.getPosition(ChessUtils.NOTATION.id));
+
+  window.chess = window.chess || {};
+  window.chess.fen = fen;
+  window.chess.lastMove = chessMove;
+
+  return fen;
 }
 
 function pieceSelected(notationSquare) {
@@ -69,3 +84,4 @@ function pieceSelected(notationSquare) {
   }
   return movesPosition;
 }
+*/

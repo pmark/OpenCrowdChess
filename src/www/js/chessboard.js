@@ -572,7 +572,10 @@ function Chessboard(containerId, config) {
 		
 		_containerSelector = '#' + containerId;
 		
-		if (!$(_containerSelector)) { throw new Error("ContainerId provided doesn't point to a DOM element."); }
+		if (!$(_containerSelector)) { 
+			console.log("ContainerId provided doesn't point to a DOM element.")
+			throw new Error("ContainerId provided doesn't point to a DOM element.");
+		}
 		
 		// Adding dynamic style for resize events
 		html += '<style id="' + cssGetStyleUniqueId() + '"></style>';
@@ -627,6 +630,7 @@ function Chessboard(containerId, config) {
 		
 		html += '</div>';
 		
+		console.log('html:', html)
 		$(_containerSelector).html(html);
 		$(_containerSelector).css('display', 'inline-block');
 	};

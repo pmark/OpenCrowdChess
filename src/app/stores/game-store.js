@@ -4,7 +4,6 @@ const ChessUtil = require('../lib/chess-util');
 
 class GameStore {
   constructor() {
-    console.log('GameStore.constructor')
     this.game = {
       id: null,
       mainPlayer: {
@@ -16,7 +15,7 @@ class GameStore {
       whiteScore: 0,
       blackScore: 0,
       turnColor: '',
-
+      fenHistory: [],
     };
 
     this.game.whiteScore = this.score(this.game.whiteTakenPieces);
@@ -26,9 +25,19 @@ class GameStore {
       getGame: this.getGame,
       whiteTurn: this.whiteTurn,
       blackTurn: this.blackTurn,
+      endTurn: this.endTurn,
     });
     
     this.bindActions(GameActions);
+  }
+
+  endTurn(fen) {
+    this.state.game.fenHistory.push(fen);
+    this.state.turnColor = this.inverseTurnColor();
+  }
+
+  inverseTurnColor() {
+    return (this.state.turnColor === 'w' ? 'b' : 'w');
   }
 
   score(takenPieces) {
@@ -55,7 +64,6 @@ class GameStore {
   }
 
   getGame() {
-    console.log('getGame:', this.state.game)
     return this.game;
   }
 

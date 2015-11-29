@@ -8,7 +8,6 @@ const GameStore = require('../stores/game-store');
 const Scoreboard = React.createClass({
 
   getInitialState () {
-    console.log("Scoreboard props:", this.props)
     return { };
   },
 

@@ -7,8 +7,6 @@ const ChessUtil = require('../lib/chess-util');
 const Cemetery = React.createClass({
 
   getInitialState () {
-    console.log('Cemetery props:', this.props)
-
     return { };
   },
 
