@@ -15,12 +15,15 @@ const Colors = require('material-ui/lib/styles/colors');
 const SwipeableViews = require('react-swipeable-views');
 
 const GameStore = require('../stores/game-store');
+const GameActions = require('../actions/game-actions');
 
 const Presence = require('./presence');
 const TurnHistory = require('./turn-history');
 const MoveSuggestions = require('./move-suggestions');
 const Chessboard = require('./chessboard');
 const Scoreboard = require('./scoreboard');
+const PlayerTable = require('./player-table');
+const SpectatorTable = require('./spectator-table');
 const UUID = require('../sources/uuid-source');
 const chess = new Chess();
 
@@ -45,6 +48,8 @@ const Main = React.createClass({
   },
 
   componentDidMount() {
+    GameStore.listen(this._onChange);
+
     // const boardElement = $('#board');
     // console.log('boardElement:', boardElement);
 
@@ -56,13 +61,25 @@ const Main = React.createClass({
 
   },
 
+  componentWillUnmount: function() {
+    GameStore.unlisten(this._onChange);
+  },
+
+  _onChange: function(arg) {
+    console.log("main _onChange:", arg)
+
+    this.setState({
+      game: GameStore.getState().game,
+    });
+  },
+
   resetGame() {
     __board.setPosition(ChessUtils.FEN.startId);
     chess.reset();
   },
 
   pieceMoved(move) {
-    console.log('moving piece:', move);
+    // console.log('moving piece:', move);
     let nextPlayer,
       status,
       chessMove = chess.move({
@@ -94,12 +111,14 @@ const Main = React.createClass({
     const fen = chess.fen();
     
     console.log('chessMove', chessMove)
-    console.log("fen:", fen)
-    console.log("position:", __board.getPosition(ChessUtils.NOTATION.id));
+    // console.log("fen:", fen)
+    // console.log("position:", __board.getPosition(ChessUtils.NOTATION.id));
 
     // window.chess = window.chess || {};
     // window.chess.fen = fen;
     // window.chess.lastMove = chessMove;
+
+    GameActions.endTurn(chessMove, fen);
 
     return fen;
   },
@@ -169,7 +188,7 @@ const Main = React.createClass({
         </div>
 
         <div className="row">
-          <div className="col-sm-offset-2 col-sm-4 col-md-offset-3 col-md-3">
+          <div className="col-sm-offset-1 col-sm-5 col-md-offset-2 col-md-4">
             <Paper style={{backgroundColor: '#dfdfdf', margin: '20px 0'}}>
               <Tabs 
                   onChange={this._handleChangeMovesTabs} 
@@ -190,7 +209,7 @@ const Main = React.createClass({
             </Paper>
           </div>
 
-          <div className="col-sm-4 col-md-3">
+          <div className="col-sm-5 col-md-4">
             <Paper style={{backgroundColor: '#dfdfdf', margin: '20px 0'}}>
               <Tabs 
                   onChange={this._handleChangeUsersTabs} 
@@ -202,10 +221,10 @@ const Main = React.createClass({
 
               <SwipeableViews index={this.state.usersTabIndex} onChangeIndex={this._handleChangeUsersTabIndex}>
                 <div>
-                  <TurnHistory height={tabContentHeight} />
+                  <PlayerTable height={tabContentHeight} />
                 </div>
                 <div>
-                  <MoveSuggestions height={tabContentHeight} />
+                  <SpectatorTable height={tabContentHeight} />
                 </div>
               </SwipeableViews>
             </Paper>

@@ -630,7 +630,6 @@ function Chessboard(containerId, config) {
 		
 		html += '</div>';
 		
-		console.log('html:', html)
 		$(_containerSelector).html(html);
 		$(_containerSelector).css('display', 'inline-block');
 	};

@@ -11,3 +11,17 @@ table.centered-table-text tr th,
 table.centered-table-text tr td {
 	text-align: center !important;
 }
+
+.clock .separator {
+	text-align: center;
+	width: 0.5em;
+	display: inline-block;
+}
+
+.clock.even .separator {
+	color: lightgray;
+}
+
+.clock.odd .separator {
+	color: darkgray;
+}

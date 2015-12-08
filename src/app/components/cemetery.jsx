@@ -19,13 +19,13 @@ const Cemetery = React.createClass({
   componentWillUnmount() {
   },
 
-  taken() {
-    return (this.props.taken ? this.props.taken : '');
+  captured() {
+    return (this.props.captured ? this.props.captured : '');
   },
 
-  takenPieceIcons(pieceType) {
+  capturedPieceIcons(pieceType) {
     let html = '';
-    const count = ChessUtil.takenCount(this.taken(), pieceType);
+    const count = ChessUtil.capturedCount(this.captured(), pieceType);
     for (let i=0; i < count; i+=1) {
         html += Chessmen[this.props.color][pieceType];
     }
@@ -36,22 +36,22 @@ const Cemetery = React.createClass({
     return (
       <h6 style={{marginBottom: '12px'}}>
         <span style={{letterSpacing: '-0.1em'}}>
-          {this.takenPieceIcons('q')}
+          {this.capturedPieceIcons('q')}
         </span>
         <span>
-          {this.takenPieceIcons('r')}
-        </span>
-
-        <span>
-          {this.takenPieceIcons('b')}
+          {this.capturedPieceIcons('r')}
         </span>
 
         <span>
-          {this.takenPieceIcons('n')}
+          {this.capturedPieceIcons('b')}
+        </span>
+
+        <span>
+          {this.capturedPieceIcons('n')}
         </span>
 
         <span style={{letterSpacing: '-0.4em'}}>
-          {this.takenPieceIcons('p')}
+          {this.capturedPieceIcons('p')}
         </span>
       </h6>
     );

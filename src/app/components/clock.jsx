@@ -13,7 +13,7 @@ const Clock = React.createClass({
   },
 
   componentDidMount() {
-    if (this.props.running) {
+    if (this.state.running) {
       setInterval(this.tick, 100);
     }
   },
@@ -25,7 +25,9 @@ const Clock = React.createClass({
     const ss = parseInt(seconds, 10);
     const tenths = (this.state.millis < 60000 ? parseInt((seconds - ss) * 10, 10) : null);
     let t = null;
-    const sep = (isEven(ss) ? ':' : ' ');
+    const eoClass = (isEven(ss) ? 'even' : 'odd');
+    const clockClasses = `clock ${eoClass}`;
+    const jsxMinutes = (minutes < 1) ? '' : (<strong>{ mm }</strong>);
 
     if (tenths !== null) {
       t = (
@@ -34,9 +36,9 @@ const Clock = React.createClass({
     }
 
     return (
-      <Paper zDepth={1} className="time" style={{lineHeight: '60px'}}>
-        <strong>{ ((mm < 10) ? '0' : '') + mm }</strong>
-        <span>{sep}</span>
+      <Paper zDepth={1} className={clockClasses} style={{lineHeight: '60px'}}>          
+        {jsxMinutes}
+        <span className='separator'>:</span>
         <strong>{ ((ss < 10) ? '0' : '') + ss }</strong>
         {t}
       </Paper>

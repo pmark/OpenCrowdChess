@@ -34,10 +34,10 @@ const Scoreboard = React.createClass({
 
         <div className="row">
           <div className="col-xs-6" style={{textAlign: 'right'}}>
-            <Cemetery color='white' taken={this.props.game.whiteTakenPieces} />
+            <Cemetery color='white' captured={this.props.game.capturedPieces['white']} />
           </div>
           <div className="col-xs-6" style={{textAlign: 'left'}}>
-            <Cemetery color='black' taken={this.props.game.blackTakenPieces} />
+            <Cemetery color='black' captured={this.props.game.capturedPieces['black']} />
           </div>
         </div>
 

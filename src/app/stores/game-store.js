@@ -10,16 +10,20 @@ class GameStore {
         name: 'Joe Bishop',
       },
       crowdPlayers: [],
-      whiteTakenPieces: 'q,r,b,n,p',
-      blackTakenPieces: 'r,r,b,b,n,n,p,q,q',
-      whiteScore: 0,
-      blackScore: 0,
+      capturedPieces: {
+        w: 'q,r,b,n,p',
+        b: 'r,r,b,b,n,n,p,q,q',
+      },
+      scores: {
+        w: 0,
+        b: 0,
+      },
       turnColor: '',
       fenHistory: [],
     };
 
-    this.game.whiteScore = this.score(this.game.whiteTakenPieces);
-    this.game.blackScore = this.score(this.game.blackTakenPieces);
+    this.game.scores['w'] = ChessUtil.score(this.game.capturedPieces['b']);
+    this.game.scores['b'] = ChessUtil.score(this.game.capturedPieces['w']);
 
     this.exportPublicMethods({
       getGame: this.getGame,
@@ -33,20 +37,11 @@ class GameStore {
 
   endTurn(fen) {
     this.state.game.fenHistory.push(fen);
-    this.state.turnColor = this.inverseTurnColor();
+    this.state.game.turnColor = this.inverseTurnColor();
   }
 
   inverseTurnColor() {
-    return (this.state.turnColor === 'w' ? 'b' : 'w');
-  }
-
-  score(takenPieces) {
-    // TODO: count captured promoted pieces as pawn score.
-    return ChessUtil.takenCount(takenPieces, 'q') * 9 +
-      ChessUtil.takenCount(takenPieces, 'r') * 5 +
-      ChessUtil.takenCount(takenPieces, 'b') * 3 +
-      ChessUtil.takenCount(takenPieces, 'n') * 3 +
-      ChessUtil.takenCount(takenPieces, 'p') * 1;
+    return ChessUtil.inverseTurnColor(this.state.turnColor);
   }
 
   whiteTurn() {
@@ -58,17 +53,21 @@ class GameStore {
   }
 
   computeScoresFromTaken() {
-    const whiteScore = this.score(this.state.whiteTakenPieces);
-    const blackScore = this.score(this.state.blackTakenPieces);
-    this.setState({whiteScore: whiteScore, blackScore: blackScore});
+    this.setState({
+      scores: {
+        white: ChessUtil.score(this.state.capturedPieces['w']),
+        black: ChessUtil.score(this.state.capturedPieces['b']),
+      },
+    });
   }
 
   getGame() {
-    return this.game;
+    return this.state.game;
   }
 
   onUpdateGame(game) {
-    this.game = game;
+    this.setState({game: game});
+    console.log('onUpdateGame state', this.state);
     this.errorMessage = null;
     // optionally return false to suppress the store change event
   }
