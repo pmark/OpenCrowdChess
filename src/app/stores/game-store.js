@@ -32,6 +32,7 @@ class GameStore {
     });
     
     this.bindActions(GameActions);
+    GameSource.setChangeListener(this.onSourceChange.bind(this));
   }
 
   onEndTurn(data) {
@@ -48,6 +49,7 @@ class GameStore {
 
     if (chessMove.captured) {
       game.capturedPieces = game.capturedPieces || {};
+      game.capturedPieces[otherColor] = game.capturedPieces[otherColor] || [];
       game.capturedPieces[otherColor].push(chessMove.captured);
       game.scores[colorThatPlayed] = ChessUtil.score(game.capturedPieces[otherColor]);
     }
@@ -116,6 +118,17 @@ console.log('\n\ncolorThatPlayed', colorThatPlayed, game.sanHistory[game.sanHist
     // optionally return false to suppress the store change event
   }
 
+  onResetGame() {
+    console.log('reset!!');
+    // this.setState({ game: EMPTY_GAME });
+    const self = this;
+    GameSource.updateCurrentGame(EMPTY_GAME, function(err, idunno) {
+      console.log('fb game update:', err, idunno);
+      self.setState({game: EMPTY_GAME});
+    });
+
+  }
+
   onFetchGame(game) {
     // reset the array while we're fetching so React can
     // be smart and render a spinner for us since the data is empty.
@@ -124,6 +137,13 @@ console.log('\n\ncolorThatPlayed', colorThatPlayed, game.sanHistory[game.sanHist
 
   onFetchGameFailed(errorMessage) {
     this.errorMessage = errorMessage;
+  }
+
+  onSourceChange(key, value) {
+    console.log('onSourceChange this', this, '\n\nkey:', key, 'from', this[key], 'to', value)
+    const game = this.game;
+    game[key] = value;
+    this.setState({ game: game });
   }
 }
 

@@ -1,7 +1,6 @@
 const alt = require('../alt');
 const GameSource = require('../sources/game-source');
 const ChessUtil = require('../lib/chess-util');
-const chess = window.chess;
 
 class GameActions {
 
@@ -40,32 +39,33 @@ class GameActions {
 
   resetGame() {
     __board.setPosition(ChessUtils.FEN.startId);
-    chess.reset();
+    __chess.reset();
+    this.dispatch();
   }
 
   pieceMoved(move) {
     // console.log('moving piece:', move);
     let nextPlayer,
       status,
-      chessMove = chess.move({
+      chessMove = __chess.move({
         from: move.from,
         to: move.to,
         promotion: 'q',
       });
 
-    nextPlayer = (chess.turn() === 'b' ? 'black' : 'white');
+    nextPlayer = (__chess.turn() === 'b' ? 'black' : 'white');
 
     if (chessMove !== null) {
-      if (chess.in_checkmate() === true) {
+      if (__chess.in_checkmate() === true) {
         status = 'CHECKMATE! Player ' + nextPlayer + ' lost.';
       }
-      else if (chess.in_draw() === true) {
+      else if (__chess.in_draw() === true) {
         status = 'DRAW!';
       }
       else {
         status = 'Next player is ' + nextPlayer + '.';
 
-        if (chess.in_check() === true) {
+        if (__chess.in_check() === true) {
           status = 'CHECK! ' + status;        
         }
       }
@@ -73,15 +73,15 @@ class GameActions {
       // updateGameInfo(status);      
     }
 
-    const fen = chess.fen();
+    const fen = __chess.fen();
     
     console.log('chessMove', chessMove)
     // console.log("fen:", fen)
     // console.log("position:", __board.getPosition(ChessUtils.NOTATION.id));
 
-    // window.chess = window.chess || {};
-    // window.chess.fen = fen;
-    // window.chess.lastMove = chessMove;
+    // __chess = __chess || {};
+    // __chess.fen = fen;
+    // __chess.lastMove = chessMove;
 
 
     // TODO: Show move confirmation instead of ending move right away.
@@ -95,7 +95,7 @@ class GameActions {
       movesNotation,
       movesPosition = [];
 
-    movesNotation = chess.moves({square: notationSquare, verbose: true});
+    movesNotation = __chess.moves({square: notationSquare, verbose: true});
     for (i = 0; i < movesNotation.length; i++) {
       movesPosition.push(ChessUtils.convertNotationSquareToIndex(movesNotation[i].to));
     }

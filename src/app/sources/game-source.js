@@ -60,6 +60,38 @@ const GameSource = {
     GameSource.currentGameRef().set(data, done);
   },
 
+  setChangeListener(cb) {
+    if (!cb) {
+      throw new Error('Empty callback')
+    }
+    if (typeof(cb) !== 'function') {
+      throw new Error('Invalid callback type: ' + typeof(cb) + ' ' + cb);
+    }
+
+    const ref = GameSource.currentGameRef();
+    ref.off();
+    // ref.on('child_removed', function(snapshot) {
+    //   console.log("activeUsers child removed:", snapshot.key(), snapshot.val());
+    //   delete(GameSource._activeUserCache[snapshot.key()]);
+    //   cb(GameSource.generatePresence());
+    // });
+    // ref.on('child_added', function(snapshot) {
+    //   console.log("activeUsers child added:", snapshot.key(), snapshot.val());
+    //   GameSource._activeUserCache[snapshot.key()] = snapshot.val();
+    //   cb(GameSource.generatePresence());
+    // });
+
+    ref.on('child_changed', function(snapshot) {
+      console.log("game child_changed:", snapshot.key(), snapshot.val());      
+      cb(snapshot.key(), snapshot.val());
+
+      // const game = GameSource.getCurrentGame().then(function(game) {
+      //   // console.log('self:', self);
+      //   cb(snapshot.key(), snapshot.val());
+      // });
+    });
+  },  
+
 };
 
 export default GameSource;

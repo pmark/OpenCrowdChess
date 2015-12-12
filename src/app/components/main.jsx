@@ -1,7 +1,4 @@
 
-const chess = new Chess();
-window.chess = chess;
-
 const React = require('react');
 const ReactDOM = require('react-dom');
 const RaisedButton = require('material-ui/lib/raised-button');
@@ -71,8 +68,9 @@ const Main = React.createClass({
     });
 
     if (game.fenHistory.length > 0) {
-      __board.setPosition(game.fenHistory[game.fenHistory.length-1]);
-      chess.fen(game.fenHistory[game.fenHistory.length-1]);
+      const fen = game.fenHistory[game.fenHistory.length-1];
+      __board.setPosition(fen);
+      __chess = new Chess(fen);
     }
   },
 
@@ -168,6 +166,12 @@ const Main = React.createClass({
                 </div>
               </SwipeableViews>
             </Paper>
+          </div>
+        </div>
+
+        <div className="row">
+          <div className="col-xs-12">
+            <RaisedButton label="Reset" onClick={GameActions.resetGame} />
           </div>
         </div>
 
