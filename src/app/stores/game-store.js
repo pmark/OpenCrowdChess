@@ -1,5 +1,6 @@
 const alt = require('../alt');
 const GameActions = require('../actions/game-actions');
+const GameSource = require('../sources/game-source');
 const ChessUtil = require('../lib/chess-util');
 const moment = require('moment');
 
@@ -68,9 +69,13 @@ console.log('\n\ncolorThatPlayed', colorThatPlayed, game.sanHistory[game.sanHist
     game.fenHistory.push(fen);
     game.moveSuggestions = [];
     game.turnColor = otherColor;
-    game.lastMoveAt = moment();
+    game.lastMoveAt = moment().toString();
 
     this.setState({ game: game });
+
+    GameSource.updateCurrentGame(game, function(err, idunno) {
+      console.log('fb game update:', err, idunno);
+    });
   }
 
   // inverseTurnColor() {

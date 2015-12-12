@@ -1,4 +1,6 @@
-/** In this file, we create a React component which incorporates components provided by material-ui */
+
+const chess = new Chess();
+window.chess = chess;
 
 const React = require('react');
 const ReactDOM = require('react-dom');
@@ -63,9 +65,15 @@ const Main = React.createClass({
   _onChange: function(arg) {
     console.log("main _onChange:", arg)
 
+    const game = GameStore.getState().game;
     this.setState({
-      game: GameStore.getState().game,
+      game: game,
     });
+
+    if (game.fenHistory.length > 0) {
+      __board.setPosition(game.fenHistory[game.fenHistory.length-1]);
+      chess.fen(game.fenHistory[game.fenHistory.length-1]);
+    }
   },
 
   componentWillMount() {

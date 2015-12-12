@@ -1,7 +1,7 @@
 const alt = require('../alt');
 const GameSource = require('../sources/game-source');
 const ChessUtil = require('../lib/chess-util');
-const chess = new Chess();
+const chess = window.chess;
 
 class GameActions {
 

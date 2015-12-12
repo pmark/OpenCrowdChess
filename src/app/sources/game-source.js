@@ -56,6 +56,10 @@ const GameSource = {
     return GameSource._currentGameRef;
   },
 
+  updateCurrentGame(data, done) {
+    GameSource.currentGameRef().set(data, done);
+  },
+
 };
 
 export default GameSource;
