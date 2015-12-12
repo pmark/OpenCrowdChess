@@ -29,3 +29,11 @@ These are plugins Webpack uses for more functionality. The HTML Webpack Plugin, 
 ###Modules:
 Modules and other things that are required will usually need to be loaded and interpreted by Webpack when bundling, and this is where Webpack looks for the different loaders.
 *Loading .js files in es6 and es7 will require a loader like babel-loader to interpret the files into es5.
+
+###Workflow
+At main component init:
+* Listen to store changes to load initial game
+* Send actions via GameActions
+** fetchCurrentGame()
+** addMoveSuggestion(move, crowdPlayer)
+** endTurn(move, fen)

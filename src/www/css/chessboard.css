@@ -46,10 +46,10 @@ div.chess_board div.chess_square_selected div.chess_player_black {
 
 
 div.chess_board div.chess_square_light.chess_square_valid_move {
-background-color: #CDE855;
+background-color: #00bcd4;
 }
 div.chess_board div.chess_square_dark.chess_square_valid_move {
-background-color: #A7C520;
+background-color: #33EFFF;
 }
 
 /*

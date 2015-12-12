@@ -1,6 +1,7 @@
 const alt = require('../alt');
 const GameSource = require('../sources/game-source');
 const ChessUtil = require('../lib/chess-util');
+const chess = new Chess();
 
 class GameActions {
 
@@ -33,32 +34,76 @@ class GameActions {
     this.dispatch(errorMessage);
   }
 
-  endTurn(chessMove, fen) {
-    console.log('endTurn...', GameSource._currentGame)
+  addMoveSuggestion(chessMove, crowdPlayer) {
+    console.log("TODO: addMoveSuggestion");
+  }
 
-    GameSource.getCurrentGame().then((game) => {
-        console.log('got current game:', game);
+  resetGame() {
+    __board.setPosition(ChessUtils.FEN.startId);
+    chess.reset();
+  }
 
-        const colorThatPlayed = chessMove.color;
-        const otherColor = ChessUtil.inverseTurnColor(colorThatPlayed);
+  pieceMoved(move) {
+    // console.log('moving piece:', move);
+    let nextPlayer,
+      status,
+      chessMove = chess.move({
+        from: move.from,
+        to: move.to,
+        promotion: 'q',
+      });
 
-        if (chessMove.captured) {
-          game.capturedPieces = game.capturedPieces || {};
-          game.capturedPieces[otherColor].push(chessMove.captured);
-          game.scores[colorThatPlayed] = ChessUtil.score(game.capturedPieces[otherColor]);
+    nextPlayer = (chess.turn() === 'b' ? 'black' : 'white');
+
+    if (chessMove !== null) {
+      if (chess.in_checkmate() === true) {
+        status = 'CHECKMATE! Player ' + nextPlayer + ' lost.';
+      }
+      else if (chess.in_draw() === true) {
+        status = 'DRAW!';
+      }
+      else {
+        status = 'Next player is ' + nextPlayer + '.';
+
+        if (chess.in_check() === true) {
+          status = 'CHECK! ' + status;        
         }
+      }
 
-        // Set move history
-        game.fenHistory = game.fenHistory || [];
-        game.fenHistory.push(fen);
+      // updateGameInfo(status);      
+    }
 
-        game.turnColor = otherColor;
-        this.actions.updateGame(game);
-      })
-    .catch((errorMessage) => {
-      console.log("endTurn Error fetching game:", errorMessage)
-    });
+    const fen = chess.fen();
+    
+    console.log('chessMove', chessMove)
+    // console.log("fen:", fen)
+    // console.log("position:", __board.getPosition(ChessUtils.NOTATION.id));
 
+    // window.chess = window.chess || {};
+    // window.chess.fen = fen;
+    // window.chess.lastMove = chessMove;
+
+
+    // TODO: Show move confirmation instead of ending move right away.
+    this.actions.endTurn(chessMove, fen);
+
+    return fen;
+  }
+
+  pieceSelected(notationSquare) {
+    let i,
+      movesNotation,
+      movesPosition = [];
+
+    movesNotation = chess.moves({square: notationSquare, verbose: true});
+    for (i = 0; i < movesNotation.length; i++) {
+      movesPosition.push(ChessUtils.convertNotationSquareToIndex(movesNotation[i].to));
+    }
+    return movesPosition;
+  }
+
+  endTurn(chessMove, fen) {
+    this.dispatch({ chessMove: chessMove, fen: fen });
   }
 };
 

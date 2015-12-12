@@ -26,18 +26,18 @@ const Scoreboard = React.createClass({
         <div className="row">
           <div className="col-xs-12">
             <AppBar
-              title={`Crowd vs. ${this.props.game.mainPlayer.name}`}
+              title={`Crowd vs. ${this.props.game.mainPlayer && (this.props.game.mainPlayer.name || 'Nobody')}`}
               showMenuIconButton={false}
               iconClassNameRight="muidocs-icon-navigation-expand-more" />
           </div>
         </div>
 
         <div className="row">
-          <div className="col-xs-6" style={{textAlign: 'right'}}>
-            <Cemetery color='white' captured={this.props.game.capturedPieces['white']} />
+          <div className="col-xs-6" style={{textAlign: 'right', height: '35px'}}>
+            <Cemetery color='w' captured={this.props.game.capturedPieces['w']} />
           </div>
           <div className="col-xs-6" style={{textAlign: 'left'}}>
-            <Cemetery color='black' captured={this.props.game.capturedPieces['black']} />
+            <Cemetery color='b' captured={this.props.game.capturedPieces['b']} />
           </div>
         </div>
 
@@ -46,10 +46,10 @@ const Scoreboard = React.createClass({
             <Clock running={GameStore.whiteTurn()} seconds="300"/>
           </div>
           <div className="col-xs-3 col-sm-2">
-            <h3>{this.props.game.whiteScore}</h3>
+            <h3>{this.props.game.scores['w']}</h3>
           </div>
           <div className="col-xs-3 col-sm-2">
-            <h3>{this.props.game.blackScore}</h3>
+            <h3>{this.props.game.scores['b']}</h3>
           </div>
           <div className="col-xs-3 col-sm-2">
             <Clock running={GameStore.blackTurn()} seconds="300" />

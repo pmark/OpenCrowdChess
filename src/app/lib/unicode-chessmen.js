@@ -1,5 +1,5 @@
 const Chessmen = {
-	black: {
+	b: {
 		k: '♚',
 		q: '♛',
 		r: '♜',
@@ -7,7 +7,7 @@ const Chessmen = {
 		n: '♞',
 		p: '♟',
 	},
-	white: {
+	w: {
 		k: '♔',
 		q: '♕',
 		r: '♖',

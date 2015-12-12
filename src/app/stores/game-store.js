@@ -1,48 +1,65 @@
 const alt = require('../alt');
 const GameActions = require('../actions/game-actions');
 const ChessUtil = require('../lib/chess-util');
+const moment = require('moment');
+
+const EMPTY_GAME = {
+  id: null,
+  lastMoveAt: null,
+  turnColor: '',
+  mainPlayer: { name: '' },
+  fenHistory: [],
+  moveSuggestions: [],
+  crowdPlayers: [],
+  capturedPieces: { w: [], b: [] },
+  scores: { w: 0, b: 0 },
+};
 
 class GameStore {
   constructor() {
-    this.game = {
-      id: null,
-      mainPlayer: {
-        name: 'Joe Bishop',
-      },
-      crowdPlayers: [],
-      capturedPieces: {
-        w: 'q,r,b,n,p',
-        b: 'r,r,b,b,n,n,p,q,q',
-      },
-      scores: {
-        w: 0,
-        b: 0,
-      },
-      turnColor: '',
-      fenHistory: [],
-    };
-
-    this.game.scores['w'] = ChessUtil.score(this.game.capturedPieces['b']);
-    this.game.scores['b'] = ChessUtil.score(this.game.capturedPieces['w']);
+    this.game = Object.assign({}, EMPTY_GAME);
+    // this.game.scores['w'] = ChessUtil.score(this.game.capturedPieces['b']);
+    // this.game.scores['b'] = ChessUtil.score(this.game.capturedPieces['w']);
 
     this.exportPublicMethods({
-      getGame: this.getGame,
+      getCurrentGame: this.getCurrentGame,
       whiteTurn: this.whiteTurn,
       blackTurn: this.blackTurn,
-      endTurn: this.endTurn,
+      emptyGame: () => EMPTY_GAME,
+      // endTurn: this.endTurn,
     });
     
     this.bindActions(GameActions);
   }
 
-  endTurn(fen) {
-    this.state.game.fenHistory.push(fen);
-    this.state.game.turnColor = this.inverseTurnColor();
+  onEndTurn(data) {
+    // Networking:
+    // ???
+
+    const {chessMove, fen} = data;
+    const game = this.game;
+    console.log('store endTurn: game:', game);
+
+    const colorThatPlayed = chessMove.color;
+    const otherColor = ChessUtil.inverseTurnColor(colorThatPlayed);
+
+    if (chessMove.captured) {
+      game.capturedPieces = game.capturedPieces || {};
+      game.capturedPieces[otherColor].push(chessMove.captured);
+      game.scores[colorThatPlayed] = ChessUtil.score(game.capturedPieces[otherColor]);
+    }
+
+    game.fenHistory.push(fen);
+    game.moveSuggestions = [];
+    game.turnColor = otherColor;
+    game.lastMoveAt = moment();
+
+    this.setState({ game: game });
   }
 
-  inverseTurnColor() {
-    return ChessUtil.inverseTurnColor(this.state.turnColor);
-  }
+  // inverseTurnColor() {
+  //   return ChessUtil.inverseTurnColor(this.state.turnColor);
+  // }
 
   whiteTurn() {
     return (this.state.game.turnColor === 'w');
@@ -53,6 +70,7 @@ class GameStore {
   }
 
   computeScoresFromTaken() {
+    console.log('computeScoresFromTaken:', this.state)
     this.setState({
       scores: {
         white: ChessUtil.score(this.state.capturedPieces['w']),
@@ -61,13 +79,18 @@ class GameStore {
     });
   }
 
-  getGame() {
+  getCurrentGame() {
     return this.state.game;
   }
 
+  sanitizeGame(game) {
+    return Object.assign(EMPTY_GAME, game);
+  }
+
   onUpdateGame(game) {
+    game = this.sanitizeGame(game);
     this.setState({game: game});
-    console.log('onUpdateGame state', this.state);
+    console.log('onUpdateGame:', game);
     this.errorMessage = null;
     // optionally return false to suppress the store change event
   }
@@ -82,7 +105,5 @@ class GameStore {
     this.errorMessage = errorMessage;
   }
 }
-
-GameActions.fetchCurrentGame();
 
 module.exports = alt.createStore(GameStore, 'GameStore');

@@ -25,7 +25,6 @@ const Scoreboard = require('./scoreboard');
 const PlayerTable = require('./player-table');
 const SpectatorTable = require('./spectator-table');
 const UUID = require('../sources/uuid-source');
-const chess = new Chess();
 
 const Main = React.createClass({
 
@@ -37,7 +36,7 @@ const Main = React.createClass({
     return {
       muiTheme: ThemeManager.getMuiTheme(LightRawTheme),
       usersTabIndex: 0,
-      game: GameStore.getState().game,
+      game: GameStore.emptyGame(),
     };
   },
 
@@ -49,16 +48,11 @@ const Main = React.createClass({
 
   componentDidMount() {
     GameStore.listen(this._onChange);
+    GameActions.fetchCurrentGame();
 
-    // const boardElement = $('#board');
-    // console.log('boardElement:', boardElement);
-
-    window.pieceSelected = this.pieceSelected;
-    window.pieceMoved = this.pieceMoved;
-    window.resetGame = this.resetGame;
-
-    // resetGame();
-
+    window.pieceSelected = GameActions.pieceSelected;
+    window.pieceMoved = GameActions.pieceMoved;
+    window.resetGame = GameActions.resetGame;
   },
 
   componentWillUnmount: function() {
@@ -71,68 +65,6 @@ const Main = React.createClass({
     this.setState({
       game: GameStore.getState().game,
     });
-  },
-
-  resetGame() {
-    __board.setPosition(ChessUtils.FEN.startId);
-    chess.reset();
-  },
-
-  pieceMoved(move) {
-    // console.log('moving piece:', move);
-    let nextPlayer,
-      status,
-      chessMove = chess.move({
-        from: move.from,
-        to: move.to,
-        promotion: 'q',
-      });
-
-    nextPlayer = (chess.turn() === 'b' ? 'black' : 'white');
-
-    if (chessMove !== null) {
-      if (chess.in_checkmate() === true) {
-        status = 'CHECKMATE! Player ' + nextPlayer + ' lost.';
-      }
-      else if (chess.in_draw() === true) {
-        status = 'DRAW!';
-      }
-      else {
-        status = 'Next player is ' + nextPlayer + '.';
-
-        if (chess.in_check() === true) {
-          status = 'CHECK! ' + status;        
-        }
-      }
-
-      // updateGameInfo(status);      
-    }
-
-    const fen = chess.fen();
-    
-    console.log('chessMove', chessMove)
-    // console.log("fen:", fen)
-    // console.log("position:", __board.getPosition(ChessUtils.NOTATION.id));
-
-    // window.chess = window.chess || {};
-    // window.chess.fen = fen;
-    // window.chess.lastMove = chessMove;
-
-    GameActions.endTurn(chessMove, fen);
-
-    return fen;
-  },
-
-  pieceSelected(notationSquare) {
-    let i,
-      movesNotation,
-      movesPosition = [];
-
-    movesNotation = chess.moves({square: notationSquare, verbose: true});
-    for (i = 0; i < movesNotation.length; i++) {
-      movesPosition.push(ChessUtils.convertNotationSquareToIndex(movesNotation[i].to));
-    }
-    return movesPosition;
   },
 
   componentWillMount() {
@@ -160,7 +92,6 @@ const Main = React.createClass({
     console.log('_handleChangeUsersTabs', arg, "this.state.usersTabIndex:", this.state.usersTabIndex);
     this.setState({ usersTabIndex: parseInt(arg, 10) });
   },
-
 
   render() {
     console.log('main render')
@@ -203,7 +134,7 @@ const Main = React.createClass({
                   <TurnHistory height={tabContentHeight} moves={this.state.game.fenHistory} />
                 </div>
                 <div>
-                  <MoveSuggestions height={tabContentHeight} moves={this.state.game.fenHistory} />
+                  <MoveSuggestions height={tabContentHeight} moves={this.state.game.moveSuggestions} />
                 </div>
               </SwipeableViews>
             </Paper>

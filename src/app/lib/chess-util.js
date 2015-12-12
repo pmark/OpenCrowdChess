@@ -5,7 +5,7 @@ const ChessUtil = {
   capturedCount(captured, pieceType) {
   	if (!captured) return 0;
     let count = 0;
-    captured.split(',').forEach(function(p) { count += (p === pieceType) ? 1 : 0; });
+    captured.forEach(function(p) { count += (p === pieceType) ? 1 : 0; });
     return count;
   },
 
