@@ -131,7 +131,7 @@ const Main = React.createClass({
 
               <SwipeableViews index={this.state.movesTabIndex} onChangeIndex={this._handleChangeMovesTabsIndex}>
                 <div>
-                  <TurnHistory height={tabContentHeight} moves={this.state.game.fenHistory} />
+                  <TurnHistory height={tabContentHeight} sanHistory={this.state.game.sanHistory} />
                 </div>
                 <div>
                   <MoveSuggestions height={tabContentHeight} moves={this.state.game.moveSuggestions} />

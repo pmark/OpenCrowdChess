@@ -1,4 +1,4 @@
-/** In this file, we create a React component which incorporates components provided by material-ui */
+2/** In this file, we create a React component which incorporates components provided by material-ui */
 
 const React = require('react');
 const Table = require('material-ui/lib/table/table');
@@ -8,6 +8,18 @@ const TableHeader = require('material-ui/lib/table/table-header');
 const TableHeaderColumn = require('material-ui/lib/table/table-header-column');
 const TableRow = require('material-ui/lib/table/table-row');
 const TableRowColumn = require('material-ui/lib/table/table-row-column');
+
+const TurnHistoryRow = React.createClass({
+    render: function() {
+        return (
+          <TableRow selected={false}>
+            <TableRowColumn>{this.props.turnNumber}</TableRowColumn>
+            <TableRowColumn>{this.props.white}</TableRowColumn>
+            <TableRowColumn>{this.props.black}</TableRowColumn>
+          </TableRow>
+        );
+    },
+});
 
 const TurnHistory = React.createClass({
 
@@ -29,6 +41,29 @@ const TurnHistory = React.createClass({
   },
 
   render() {
+
+    const moves = [];
+    let white = true;
+    this.props.sanHistory.forEach(function(san) {
+      if (white) {
+        moves.push(san);
+      }
+      else {
+        moves[moves.length-1] = `${moves[moves.length-1]},${san}`;
+      }
+      white = !white;
+    });
+
+    const moveCount = moves.length;
+    const rows = moves.reverse().map(function(move, index) {
+      const wb = move.split(',');
+      const white = wb[0];
+      const black = wb[1];
+      const turnNumber = (moveCount - index);
+      console.log(index, white, black);
+      return <TurnHistoryRow key={index} turnNumber={turnNumber} white={white} black={black} />;
+    });
+
     return (
       <Table
         height={this.props.height}
@@ -56,16 +91,7 @@ const TurnHistory = React.createClass({
           showRowHover={true}
           displayRowCheckbox={false}
           stripedRows={true}>
-          <TableRow selected={false}>
-            <TableRowColumn>1</TableRowColumn>
-            <TableRowColumn>e4</TableRowColumn>
-            <TableRowColumn>c5</TableRowColumn>
-          </TableRow>
-          <TableRow>
-            <TableRowColumn>2</TableRowColumn>
-            <TableRowColumn>Nf3</TableRowColumn>
-            <TableRowColumn>d6</TableRowColumn>
-          </TableRow>
+          {rows}
         </TableBody>
       </Table>  
     );

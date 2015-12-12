@@ -9,6 +9,7 @@ const EMPTY_GAME = {
   turnColor: '',
   mainPlayer: { name: '' },
   fenHistory: [],
+  sanHistory: [],
   moveSuggestions: [],
   crowdPlayers: [],
   capturedPieces: { w: [], b: [] },
@@ -39,6 +40,7 @@ class GameStore {
     const {chessMove, fen} = data;
     const game = this.game;
     console.log('store endTurn: game:', game);
+    console.log('chessMove:', chessMove);
 
     const colorThatPlayed = chessMove.color;
     const otherColor = ChessUtil.inverseTurnColor(colorThatPlayed);
@@ -48,6 +50,20 @@ class GameStore {
       game.capturedPieces[otherColor].push(chessMove.captured);
       game.scores[colorThatPlayed] = ChessUtil.score(game.capturedPieces[otherColor]);
     }
+
+    game.sanHistory.push(chessMove.san);
+/*
+    if (colorThatPlayed === 'w') {
+      game.sanHistory.push(chessMove.san);
+    }
+    else {
+      let lastItem = game.sanHistory[game.sanHistory.length-1];
+      console.log(game.sanHistory.length-1, '------------lastItem:', lastItem, '\n\n')
+      lastItem = `${lastItem},${chessMove.san}`;
+      game.sanHistory[game.sanHistory.length-1] = lastItem;
+    }
+console.log('\n\ncolorThatPlayed', colorThatPlayed, game.sanHistory[game.sanHistory.length-1])
+*/
 
     game.fenHistory.push(fen);
     game.moveSuggestions = [];
