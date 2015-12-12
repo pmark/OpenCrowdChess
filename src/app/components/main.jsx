@@ -36,6 +36,7 @@ const Main = React.createClass({
     return {
       muiTheme: ThemeManager.getMuiTheme(LightRawTheme),
       usersTabIndex: 0,
+      movesTabIndex: 0,
       game: GameStore.emptyGame(),
     };
   },
