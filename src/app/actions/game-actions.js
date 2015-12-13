@@ -36,8 +36,8 @@ class GameActions {
   }
 
   resetGame() {
-    __board.setPosition(ChessUtils.FEN.startId);
-    __chess.reset();
+    // __board.setPosition(ChessUtils.FEN.startId);
+    // __chess.reset();
     this.dispatch();
   }
 

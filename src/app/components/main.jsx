@@ -60,18 +60,23 @@ const Main = React.createClass({
   },
 
   _onChange: function(arg) {
-    // console.log("main _onChange:", arg)
+    console.log("main _onChange:", arg)
 
     const game = GameStore.getState().game;
     this.setState({
       game: game,
     });
 
-    if (game.fenHistory.length > 0) {
-      const fen = game.fenHistory[game.fenHistory.length-1];
-      __board.setPosition(fen);
+    let fen = null;
+    if (game.fenHistory && game.fenHistory.length > 0) {
+      fen = game.fenHistory[game.fenHistory.length-1];
       __chess = new Chess(fen);
     }
+    else {
+      fen = ChessUtils.FEN.startId;
+      __chess = new Chess();
+    }
+    __board.setPosition(fen);
   },
 
   componentWillMount() {

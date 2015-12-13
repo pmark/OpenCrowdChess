@@ -43,25 +43,30 @@ const TurnHistory = React.createClass({
   render() {
 
     const moves = [];
-    let white = true;
-    this.props.sanHistory.forEach(function(san) {
-      if (white) {
-        moves.push(san);
-      }
-      else {
-        moves[moves.length-1] = `${moves[moves.length-1]},${san}`;
-      }
-      white = !white;
-    });
+    let rows = null;
 
-    const moveCount = moves.length;
-    const rows = moves.reverse().map(function(move, index) {
-      const wb = move.split(',');
-      const white = wb[0];
-      const black = wb[1];
-      const turnNumber = (moveCount - index);
-      return <TurnHistoryRow key={index} turnNumber={turnNumber} white={white} black={black} />;
-    });
+    if (this.props.sanHistory) {      
+      let white = true;
+      this.props.sanHistory.forEach(function(san) {
+        if (white) {
+          moves.push(san);
+        }
+        else {
+          moves[moves.length-1] = `${moves[moves.length-1]},${san}`;
+        }
+        white = !white;
+      });
+
+      const moveCount = moves.length;
+      rows = moves.reverse().map(function(move, index) {
+        const wb = move.split(',');
+        const white = wb[0];
+        const black = wb[1];
+        const turnNumber = (moveCount - index);
+        return <TurnHistoryRow key={index} turnNumber={turnNumber} white={white} black={black} />;
+      });
+    }
+
 
     return (
       <Table

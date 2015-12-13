@@ -7,27 +7,25 @@ const moment = require('moment');
 const EMPTY_GAME = {
   id: null,
   lastMoveAt: null,
-  turnColor: '',
+  turnColor: 'w',
   mainPlayer: { name: '' },
-  fenHistory: [],
-  sanHistory: [],
-  moveSuggestions: [],
-  crowdPlayers: [],
+  fenHistory: null,
+  sanHistory: null,
+  moveSuggestions: null,
+  crowdPlayers: null,
   capturedPieces: { w: [], b: [] },
   scores: { w: 0, b: 0 },
 };
 
 class GameStore {
   constructor() {
-    this.game = Object.assign({}, EMPTY_GAME);
-    // this.game.scores['w'] = ChessUtil.score(this.game.capturedPieces['b']);
-    // this.game.scores['b'] = ChessUtil.score(this.game.capturedPieces['w']);
+    this.game = this.emptyGame();
 
     this.exportPublicMethods({
       getCurrentGame: this.getCurrentGame,
       whiteTurn: this.whiteTurn,
       blackTurn: this.blackTurn,
-      emptyGame: () => EMPTY_GAME,
+      emptyGame: () => this.sanitizeGame({}),
       // endTurn: this.endTurn,
     });
     
@@ -54,6 +52,7 @@ class GameStore {
       game.scores[colorThatPlayed] = ChessUtil.score(game.capturedPieces[otherColor]);
     }
 
+    game.sanHistory = game.sanHistory || [];
     game.sanHistory.push(chessMove.san);
 /*
     if (colorThatPlayed === 'w') {
@@ -68,6 +67,7 @@ class GameStore {
 console.log('\n\ncolorThatPlayed', colorThatPlayed, game.sanHistory[game.sanHistory.length-1])
 */
 
+    game.fenHistory = game.fenHistory || [];
     game.fenHistory.push(fen);
     game.moveSuggestions = [];
     game.turnColor = otherColor;
@@ -107,7 +107,11 @@ console.log('\n\ncolorThatPlayed', colorThatPlayed, game.sanHistory[game.sanHist
   }
 
   sanitizeGame(game) {
-    return Object.assign(EMPTY_GAME, game);
+    return Object.assign({}, EMPTY_GAME, game);
+  }
+
+  emptyGame() {
+    return this.sanitizeGame({});
   }
 
   onUpdateGame(game) {
@@ -119,12 +123,12 @@ console.log('\n\ncolorThatPlayed', colorThatPlayed, game.sanHistory[game.sanHist
   }
 
   onResetGame() {
-    console.log('reset!!');
-    // this.setState({ game: EMPTY_GAME });
-    const self = this;
-    GameSource.updateCurrentGame(EMPTY_GAME, function(err, idunno) {
+    const game = this.emptyGame();
+    this.setState({ game: game });
+
+    console.log('reset!!', game);
+    GameSource.updateCurrentGame(game, function(err, idunno) {
       console.log('self:', self, 'onResetGame update:', err, idunno);
-      self.setState({game: EMPTY_GAME});
     });
 
   }
@@ -139,11 +143,17 @@ console.log('\n\ncolorThatPlayed', colorThatPlayed, game.sanHistory[game.sanHist
     this.errorMessage = errorMessage;
   }
 
-  onSourceChange(key, value) {
+  onSourceChange(key, value, options={}) {
     // console.log('onSourceChange this', this, '\n\nkey:', key, 'from', this[key], 'to', value)
     const game = this.game;
-    game[key] = value;
-    this.setState({ game: game });
+    if (options && options.remove) {
+      delete game[key];
+    }
+    else {
+      game[key] = value;      
+    }
+
+    this.setState({ game: this.sanitizeGame(game) });
   }
 }
 

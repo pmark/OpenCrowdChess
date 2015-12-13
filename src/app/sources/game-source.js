@@ -67,9 +67,17 @@ const GameSource = {
     const ref = GameSource.currentGameRef();
     if (ref && GameSource._changeListener) {
       ref.off();
+      ref.on('child_added', function(snapshot) {
+        console.log("game child_added:", snapshot.key(), snapshot.val());
+        GameSource._changeListener(snapshot.key(), snapshot.val());
+      });
       ref.on('child_changed', function(snapshot) {
         console.log("game child_changed:", snapshot.key(), snapshot.val());      
         GameSource._changeListener(snapshot.key(), snapshot.val());
+      });
+      ref.on('child_removed', function(snapshot) {
+        console.log("game child_removed:", snapshot.key(), snapshot.val());
+        GameSource._changeListener(snapshot.key(), snapshot.val(), { remove: true });
       });
     }
   },
