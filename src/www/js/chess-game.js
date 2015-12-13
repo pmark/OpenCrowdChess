@@ -4,7 +4,6 @@ var __board = null;
 var __chess = window.chess = new Chess();
 
 $(function() {
-  console.log("\nDOCUMENT READY\n", window.pieceSelected, window.pieceMoved)
   __board = new Chessboard('board', {
     position: ChessUtils.FEN.startId,
     eventHandlers: {

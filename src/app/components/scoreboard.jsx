@@ -41,7 +41,7 @@ const Scoreboard = React.createClass({
           </div>
         </div>
 
-        <div className="row">
+        <div className="row scores">
           <div className="col-xs-3 col-sm-offset-2 col-sm-2 col-lg-offset-2 col-lg-2">
             <Clock running={GameStore.whiteTurn()} seconds="300"/>
           </div>

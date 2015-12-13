@@ -8,7 +8,6 @@ class GameActions {
   }
 
   updateGame(game) {
-    console.log("updateGame dispatching", game);
     this.dispatch(game);
   }
 
@@ -20,7 +19,6 @@ class GameActions {
 
     GameSource.getCurrentGame().then((game) => {
         // we can access other actions within our action through `this.actions`
-        // console.log("Fetched game:", game);
         this.actions.updateGame(game);
       })
     .catch((errorMessage) => {
@@ -44,7 +42,6 @@ class GameActions {
   }
 
   pieceMoved(move) {
-    // console.log('moving piece:', move);
     let nextPlayer,
       status,
       chessMove = __chess.move({
@@ -75,7 +72,6 @@ class GameActions {
 
     const fen = __chess.fen();
     
-    console.log('chessMove', chessMove)
     // console.log("fen:", fen)
     // console.log("position:", __board.getPosition(ChessUtils.NOTATION.id));
 

@@ -60,7 +60,7 @@ const Main = React.createClass({
   },
 
   _onChange: function(arg) {
-    console.log("main _onChange:", arg)
+    // console.log("main _onChange:", arg)
 
     const game = GameStore.getState().game;
     this.setState({
@@ -101,7 +101,6 @@ const Main = React.createClass({
   },
 
   render() {
-    console.log('main render')
     const containerStyle = {
       textAlign: 'center',
       paddingTop: '10px',

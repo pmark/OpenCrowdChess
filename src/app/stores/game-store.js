@@ -76,7 +76,7 @@ console.log('\n\ncolorThatPlayed', colorThatPlayed, game.sanHistory[game.sanHist
     this.setState({ game: game });
 
     GameSource.updateCurrentGame(game, function(err, idunno) {
-      console.log('fb game update:', err, idunno);
+      console.log('onEndTurn updateCurrentGame:', err, idunno);
     });
   }
 
@@ -123,7 +123,7 @@ console.log('\n\ncolorThatPlayed', colorThatPlayed, game.sanHistory[game.sanHist
     // this.setState({ game: EMPTY_GAME });
     const self = this;
     GameSource.updateCurrentGame(EMPTY_GAME, function(err, idunno) {
-      console.log('fb game update:', err, idunno);
+      console.log('self:', self, 'onResetGame update:', err, idunno);
       self.setState({game: EMPTY_GAME});
     });
 
@@ -140,7 +140,7 @@ console.log('\n\ncolorThatPlayed', colorThatPlayed, game.sanHistory[game.sanHist
   }
 
   onSourceChange(key, value) {
-    console.log('onSourceChange this', this, '\n\nkey:', key, 'from', this[key], 'to', value)
+    // console.log('onSourceChange this', this, '\n\nkey:', key, 'from', this[key], 'to', value)
     const game = this.game;
     game[key] = value;
     this.setState({ game: game });

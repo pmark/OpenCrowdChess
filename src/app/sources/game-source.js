@@ -8,6 +8,7 @@ const GameSource = {
   _currentGameId: null,
   _currentGameRef: null,
   _gamesRef: null,
+  _changeListener: null,
 
   gamesRef() {
     if (!GameSource._gamesRef) {
@@ -27,11 +28,12 @@ const GameSource = {
         FirebaseDB.ref.child('currentGameId').once('value', function(snapshot) {  
           if (snapshot.exists()) {
             GameSource._currentGameId = snapshot.val();
+            console.log('GameSource._currentGameId:', GameSource._currentGameId);
 
             GameSource.currentGameRef().once('value', function(snapshot) {  
               GameSource._currentGame = snapshot.val();
               resolve(GameSource._currentGame);
-            });          
+            });
           }
           else {
             if (!GameSource._currentGameId) {
@@ -50,14 +52,26 @@ const GameSource = {
   },
 
   currentGameRef() {
-    if (!GameSource._currentGameRef) {
+    if (!GameSource._currentGameRef && GameSource._currentGameId) {
       GameSource._currentGameRef = new Firebase(`${FirebaseDB.url}/games/${GameSource._currentGameId}`);
+      GameSource.assignChangeListenerToCurrentGameRef();
     }
     return GameSource._currentGameRef;
   },
 
   updateCurrentGame(data, done) {
     GameSource.currentGameRef().set(data, done);
+  },
+
+  assignChangeListenerToCurrentGameRef() {
+    const ref = GameSource.currentGameRef();
+    if (ref && GameSource._changeListener) {
+      ref.off();
+      ref.on('child_changed', function(snapshot) {
+        console.log("game child_changed:", snapshot.key(), snapshot.val());      
+        GameSource._changeListener(snapshot.key(), snapshot.val());
+      });
+    }
   },
 
   setChangeListener(cb) {
@@ -68,28 +82,8 @@ const GameSource = {
       throw new Error('Invalid callback type: ' + typeof(cb) + ' ' + cb);
     }
 
-    const ref = GameSource.currentGameRef();
-    ref.off();
-    // ref.on('child_removed', function(snapshot) {
-    //   console.log("activeUsers child removed:", snapshot.key(), snapshot.val());
-    //   delete(GameSource._activeUserCache[snapshot.key()]);
-    //   cb(GameSource.generatePresence());
-    // });
-    // ref.on('child_added', function(snapshot) {
-    //   console.log("activeUsers child added:", snapshot.key(), snapshot.val());
-    //   GameSource._activeUserCache[snapshot.key()] = snapshot.val();
-    //   cb(GameSource.generatePresence());
-    // });
-
-    ref.on('child_changed', function(snapshot) {
-      console.log("game child_changed:", snapshot.key(), snapshot.val());      
-      cb(snapshot.key(), snapshot.val());
-
-      // const game = GameSource.getCurrentGame().then(function(game) {
-      //   // console.log('self:', self);
-      //   cb(snapshot.key(), snapshot.val());
-      // });
-    });
+    GameSource._changeListener = cb;
+    GameSource.assignChangeListenerToCurrentGameRef();
   },  
 
 };

@@ -20,10 +20,10 @@ div.chess_board div.chess_square_dark {
 }
 /* The color of the light and dark squares when selected. */
 div.chess_board div.chess_square_light.chess_square_selected {
-	background-color: #eeeeee;
+	background-color: #ffff66;
 }
 div.chess_board div.chess_square_dark.chess_square_selected  {
-	background-color: #c5c1a1;
+	background-color: #ffff66;
 }
 
 
@@ -250,4 +250,9 @@ div.chess_board div.chess_label_row_reversed {
 
 div.chess_board div.chess_label_hidden {
 	visibility: hidden;
+}
+
+.scores h3 {
+	margin-top: 10px;
+	margin-bottom: 10px;
 }

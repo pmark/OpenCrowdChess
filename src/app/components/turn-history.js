@@ -60,7 +60,6 @@ const TurnHistory = React.createClass({
       const white = wb[0];
       const black = wb[1];
       const turnNumber = (moveCount - index);
-      console.log(index, white, black);
       return <TurnHistoryRow key={index} turnNumber={turnNumber} white={white} black={black} />;
     });
 
