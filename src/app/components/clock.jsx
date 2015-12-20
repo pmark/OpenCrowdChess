@@ -3,19 +3,25 @@
 const React = require('react');
 const Paper = require('material-ui/lib/paper');
 
+const TICK_INTERVAL = 1000;
+let ticker = null;
+
 const Clock = React.createClass({
 
   getInitialState () {
     return {
       millis: this.props.seconds * 1000,
-      running: this.props.running,
+      ticker: null,
+      turnColor: '',
     };
   },
 
   componentDidMount() {
-    if (this.state.running) {
-      setInterval(this.tick, 100);
-    }
+    ticker = setInterval(this.tick, TICK_INTERVAL);
+  },
+
+  componentWillReceiveProps(newProps, ) {
+    this.setState({ millis: newProps.seconds * 1000});
   },
 
   render() {
@@ -46,11 +52,14 @@ const Clock = React.createClass({
   },
 
   tick() {
-    let newTime = this.state.millis - 100;
-    if (newTime < 0) {
-      newTime = 101000;
+    if (this.props.running) {
+      let newTime = this.state.millis - TICK_INTERVAL;
+      if (newTime < 0) {
+        newTime = 0;
+        clearInterval(ticker);
+      }
+      this.setState({ millis: newTime })
     }
-    this.setState({ millis: newTime })
   },
 
 });

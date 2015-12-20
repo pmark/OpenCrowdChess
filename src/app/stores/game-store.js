@@ -13,8 +13,8 @@ const EMPTY_GAME = {
   sanHistory: null,
   moveSuggestions: null,
   crowdPlayers: null,
-  capturedPieces: { w: [], b: [] },
-  scores: { w: 0, b: 0 },
+  capturedPieces: null,  // { w: [], b: [] },
+  scores: null,  // { w: 0, b: 0 },
 };
 
 class GameStore {
@@ -49,6 +49,8 @@ class GameStore {
       game.capturedPieces = game.capturedPieces || {};
       game.capturedPieces[otherColor] = game.capturedPieces[otherColor] || [];
       game.capturedPieces[otherColor].push(chessMove.captured);
+
+      game.scores = game.scores || {};
       game.scores[colorThatPlayed] = ChessUtil.score(game.capturedPieces[otherColor]);
     }
 

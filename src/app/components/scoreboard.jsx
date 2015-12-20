@@ -7,20 +7,28 @@ const GameStore = require('../stores/game-store');
 
 const Scoreboard = React.createClass({
 
-  getInitialState () {
-    return { };
-  },
+  // getInitialState () {
+  //   // return Object.assign({}, this.props, { turnColor: this.props.game.turnColor });
+  //   return this.props.game;
+  // },
 
-  componentDidMount() {
-  },
+  // componentDidMount() {
+  // },
 
-  componentWillMount() {
-  },
+  // componentWillReceiveProps(newProps) {
+  //   console.log('props:', newProps);
+  //   console.log('state:', this.state);
+  //   this.setState(this.props.game);
+  // },
 
-  componentWillUnmount() {
-  },
+  // componentWillUnmount() {
+  // },
 
   render() {
+    const capturedPieces = this.props.game.capturedPieces || {};
+    const scores = this.props.game.scores || {};
+console.log('Scoreboard render', this.props, 'state:', this.state);
+
     return (
       <div>
         <div className="row">
@@ -34,25 +42,25 @@ const Scoreboard = React.createClass({
 
         <div className="row">
           <div className="col-xs-6" style={{textAlign: 'right', height: '35px'}}>
-            <Cemetery color='w' captured={this.props.game.capturedPieces['w']} />
+            <Cemetery color='w' captured={capturedPieces['w']} />
           </div>
           <div className="col-xs-6" style={{textAlign: 'left'}}>
-            <Cemetery color='b' captured={this.props.game.capturedPieces['b']} />
+            <Cemetery color='b' captured={capturedPieces['b']} />
           </div>
         </div>
 
         <div className="row scores">
           <div className="col-xs-3 col-sm-offset-2 col-sm-2 col-lg-offset-2 col-lg-2">
-            <Clock running={GameStore.whiteTurn()} seconds="300"/>
+            <Clock color='w' turnColor={this.props.turnColor} running={this.props.turnColor === 'w'} seconds={300}/>
           </div>
           <div className="col-xs-3 col-sm-2">
-            <h3>{this.props.game.scores['w']}</h3>
+            <h3>{scores['w']}</h3>
           </div>
           <div className="col-xs-3 col-sm-2">
-            <h3>{this.props.game.scores['b']}</h3>
+            <h3>{scores['b']}</h3>
           </div>
           <div className="col-xs-3 col-sm-2">
-            <Clock running={GameStore.blackTurn()} seconds="300" />
+            <Clock color='b' turnColor={this.props.turnColor} running={this.props.turnColor === 'b'} seconds={300} />
           </div>
         </div>
 
