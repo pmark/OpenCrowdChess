@@ -13,20 +13,21 @@ const EMPTY_GAME = {
   sanHistory: null,
   moveSuggestions: null,
   crowdPlayers: null,
-  capturedPieces: null,  // { w: [], b: [] },
-  scores: null,  // { w: 0, b: 0 },
+  capturedPieces: { w: [], b: [] },
+  scores: { w: 0, b: 0 },
+  secondsRemaining: { w: 300, b: 300 },
 };
 
 class GameStore {
   constructor() {
     this.game = this.emptyGame();
+    this.turnStartedAtMillis = Number(moment().format('x'));
 
     this.exportPublicMethods({
       getCurrentGame: this.getCurrentGame,
       whiteTurn: this.whiteTurn,
       blackTurn: this.blackTurn,
       emptyGame: () => this.sanitizeGame({}),
-      // endTurn: this.endTurn,
     });
     
     this.bindActions(GameActions);
@@ -34,16 +35,13 @@ class GameStore {
   }
 
   onEndTurn(data) {
-    // Networking:
-    // ???
-
     const {chessMove, fen} = data;
     const game = this.game;
-    console.log('store endTurn: game:', game);
-    console.log('chessMove:', chessMove);
-
     const colorThatPlayed = chessMove.color;
     const otherColor = ChessUtil.inverseTurnColor(colorThatPlayed);
+
+    console.log('store endTurn: game:', game);
+    console.log('chessMove:', chessMove);
 
     if (chessMove.captured) {
       game.capturedPieces = game.capturedPieces || {};
@@ -74,6 +72,13 @@ console.log('\n\ncolorThatPlayed', colorThatPlayed, game.sanHistory[game.sanHist
     game.moveSuggestions = [];
     game.turnColor = otherColor;
     game.lastMoveAt = moment().toString();
+
+    const secondsSinceTurnStarted = moment().diff(moment(Number(this.turnStartedAtMillis)), 'milliseconds') / 1000;
+    console.log('secondsSinceTurnStarted', secondsSinceTurnStarted);
+
+    console.log('1  game.secondsRemaining[colorThatPlayed]', game.secondsRemaining[colorThatPlayed]);
+    game.secondsRemaining[colorThatPlayed] = Math.max(0, Number(game.secondsRemaining[colorThatPlayed]) - secondsSinceTurnStarted);
+    console.log('2  game.secondsRemaining[colorThatPlayed]', game.secondsRemaining[colorThatPlayed]);
 
     this.setState({ game: game });
 
@@ -145,17 +150,30 @@ console.log('\n\ncolorThatPlayed', colorThatPlayed, game.sanHistory[game.sanHist
     this.errorMessage = errorMessage;
   }
 
-  onSourceChange(key, value, options={}) {
-    // console.log('onSourceChange this', this, '\n\nkey:', key, 'from', this[key], 'to', value)
+  onSourceChange(key, newValue, options={}) {
+    // console.log('onSourceChange this', this, '\n\nkey:', key, 'from', this[key], 'to', newValue)
+    console.log('new', key);
     const game = this.game;
+    let tmpTurnStartedAtMillis = this.turnStartedAtMillis;
+
     if (options && options.remove) {
       delete game[key];
     }
     else {
-      game[key] = value;      
+      const oldValue = game[key];
+
+      if (key === 'turnColor') {
+        tmpTurnStartedAtMillis = Number(moment().format('x'));
+        console.log("\n\nNEW TURN!\n\n");
+      }
+
+      game[key] = newValue;
     }
 
-    this.setState({ game: this.sanitizeGame(game) });
+    this.setState({
+      game: this.sanitizeGame(game),
+      turnStartedAtMillis: tmpTurnStartedAtMillis,
+    });
   }
 }
 

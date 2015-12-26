@@ -115,7 +115,7 @@ const Main = React.createClass({
 
     return (
       <div className="container" style={containerStyle}>
-        <Scoreboard game={this.state.game} turnColor={this.state.game.turnColor}/>
+        <Scoreboard game={this.state.game}/>
 
         <div className="row" style={{textAlign: 'center', marginTop:'8px'}}>
           <div className="col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">

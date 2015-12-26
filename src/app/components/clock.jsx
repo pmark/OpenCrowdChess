@@ -3,7 +3,7 @@
 const React = require('react');
 const Paper = require('material-ui/lib/paper');
 
-const TICK_INTERVAL = 1000;
+const TICK_INTERVAL = 100;
 let ticker = null;
 
 const Clock = React.createClass({
@@ -12,7 +12,6 @@ const Clock = React.createClass({
     return {
       millis: this.props.seconds * 1000,
       ticker: null,
-      turnColor: '',
     };
   },
 
@@ -29,11 +28,14 @@ const Clock = React.createClass({
     const mm = parseInt(minutes, 10);
     const seconds = ((minutes - mm) * 60);
     const ss = parseInt(seconds, 10);
-    const tenths = (this.state.millis < 60000 ? parseInt((seconds - ss) * 10, 10) : null);
     let t = null;
     const eoClass = (isEven(ss) ? 'even' : 'odd');
     const clockClasses = `clock ${eoClass}`;
+    const zeroPaddedSeconds = (ss < 10 && mm > 0) ? `0${ss}` : ss;
+    const jsxSeconds = (<strong>{ zeroPaddedSeconds }</strong>);
     const jsxMinutes = (minutes < 1) ? '' : (<strong>{ mm }</strong>);
+    const separator = (mm === 0) ? '' : (<span className='separator'>:</span>);
+    const tenths = (mm === 0) ? parseInt((seconds - ss) * 10, 10) : null;
 
     if (tenths !== null) {
       t = (
@@ -44,8 +46,8 @@ const Clock = React.createClass({
     return (
       <Paper zDepth={1} className={clockClasses} style={{lineHeight: '60px'}}>          
         {jsxMinutes}
-        <span className='separator'>:</span>
-        <strong>{ ((ss < 10) ? '0' : '') + ss }</strong>
+        {separator}
+        {jsxSeconds}
         {t}
       </Paper>
     );

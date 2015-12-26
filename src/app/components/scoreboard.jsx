@@ -51,7 +51,7 @@ console.log('Scoreboard render', this.props, 'state:', this.state);
 
         <div className="row scores">
           <div className="col-xs-3 col-sm-offset-2 col-sm-2 col-lg-offset-2 col-lg-2">
-            <Clock color='w' turnColor={this.props.turnColor} running={this.props.turnColor === 'w'} seconds={300}/>
+            <Clock running={this.props.game.turnColor === 'w'} seconds={this.props.game.secondsRemaining.w}/>
           </div>
           <div className="col-xs-3 col-sm-2">
             <h3>{scores['w']}</h3>
@@ -60,7 +60,7 @@ console.log('Scoreboard render', this.props, 'state:', this.state);
             <h3>{scores['b']}</h3>
           </div>
           <div className="col-xs-3 col-sm-2">
-            <Clock color='b' turnColor={this.props.turnColor} running={this.props.turnColor === 'b'} seconds={300} />
+            <Clock running={this.props.game.turnColor === 'b'} seconds={this.props.game.secondsRemaining.b} />
           </div>
         </div>
 

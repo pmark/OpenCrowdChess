@@ -72,7 +72,7 @@ const GameSource = {
         GameSource._changeListener(snapshot.key(), snapshot.val());
       });
       ref.on('child_changed', function(snapshot) {
-        console.log("game child_changed:", snapshot.key(), snapshot.val());      
+        // console.log("game child_changed:", snapshot.key(), snapshot.val());      
         GameSource._changeListener(snapshot.key(), snapshot.val());
       });
       ref.on('child_removed', function(snapshot) {

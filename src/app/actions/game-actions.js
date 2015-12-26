@@ -42,13 +42,13 @@ class GameActions {
   }
 
   pieceMoved(move) {
-    let nextPlayer,
-      status,
-      chessMove = __chess.move({
-        from: move.from,
-        to: move.to,
-        promotion: 'q',
-      });
+    let nextPlayer;
+    let status;
+    let chessMove = __chess.move({
+      from: move.from,
+      to: move.to,
+      promotion: 'q',
+    });
 
     nextPlayer = (__chess.turn() === 'b' ? 'black' : 'white');
 
@@ -86,6 +86,10 @@ class GameActions {
     return fen;
   }
 
+  endTurn(chessMove, fen) {
+    this.dispatch({ chessMove: chessMove, fen: fen });
+  }
+
   pieceSelected(notationSquare) {
     let i,
       movesNotation,
@@ -98,9 +102,6 @@ class GameActions {
     return movesPosition;
   }
 
-  endTurn(chessMove, fen) {
-    this.dispatch({ chessMove: chessMove, fen: fen });
-  }
 };
 
 export default alt.createActions(GameActions);
