@@ -3,6 +3,7 @@
 const React = require('react');
 const Paper = require('material-ui/lib/paper');
 const GameSource = require('../sources/game-source');
+const GameActions = require('../actions/game-actions');
 
 const TICK_INTERVAL = 100;
 let ticker = null;
@@ -10,7 +11,7 @@ let ticker = null;
 const Clock = React.createClass({
 
   getInitialState () {
-    return this.stateWithProps(this.props);
+    return this.stateWithProps(this.props, this.context);
   },
 
   contextTypes: {
@@ -22,11 +23,11 @@ const Clock = React.createClass({
   },
 
   componentWillReceiveProps(newProps, newContext) {
-    this.setState(this.stateWithProps(newProps));
+    this.setState(this.stateWithProps(newProps, newContext));
   },
 
-  stateWithProps(deezProps) {
-    const g = this.context.game;
+  stateWithProps(deezProps, context) {
+    const g = context.game;
     let running = (
       g.turnColor === deezProps.color && 
       g.fenHistory && 
@@ -45,8 +46,9 @@ const Clock = React.createClass({
       }
 
       const lastTurnTime = g.turnTimes[g.turnTimes.length-1];
-      const elapsedSeconds = Number(lastTurnTime ? (serverTimestamp - lastTurnTime.endedAt) : 0) / 1000;
-      secondsRemaining = secondsRemaining - elapsedSeconds;
+      const elapsedMillis = Number(lastTurnTime ? (serverTimestamp - lastTurnTime.endedAt) : 0);
+      const elapsedSeconds = (elapsedMillis / 1000);
+      secondsRemaining = (secondsRemaining - elapsedSeconds);
     }
 
     secondsRemaining = Math.max(0, secondsRemaining);
@@ -54,7 +56,7 @@ const Clock = React.createClass({
     if (secondsRemaining === 0) { running = false; }
 
     return {
-      millis: (secondsRemaining * 1000),
+      millis: parseInt(secondsRemaining * 1000),
       running: running,
     }
   },
@@ -95,6 +97,7 @@ const Clock = React.createClass({
       if (newTime < 0) {
         newTime = 0;
         clearInterval(ticker);
+        GameActions.clockExpired(this.props.color);
       }
       this.setState({ millis: newTime })
     }

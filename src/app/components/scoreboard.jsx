@@ -7,10 +7,6 @@ const GameStore = require('../stores/game-store');
 
 const Scoreboard = React.createClass({
 
-  // componentWillReceiveProps(newProps) {
-  //   this.setState(this.context.game);
-  // },
-
   contextTypes: {
     game: React.PropTypes.object,
   },

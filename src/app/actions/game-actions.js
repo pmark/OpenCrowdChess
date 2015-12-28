@@ -43,6 +43,10 @@ class GameActions {
     this.dispatch();
   }
 
+  clockExpired(color) {
+    console.log('clock expired!', color);
+  }
+
   pieceMoved(move) {
     let nextPlayer;
     const status = {
@@ -75,7 +79,7 @@ class GameActions {
       }
     }
 
-    console.log('status:', status)
+    console.log('status:', status);
 
     const fen = __chess.fen();
     

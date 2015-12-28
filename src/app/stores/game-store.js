@@ -15,7 +15,7 @@ const EMPTY_GAME = {
   crowdPlayers: null,
   capturedPieces: { w: [], b: [] },
   scores: { w: 0, b: 0 },
-  secondsRemaining: { w: 300, b: 300 },
+  secondsRemaining: { w: 10, b: 10 },
   firstMoveAt: null,
   winner: null,
   draw: null,
@@ -146,9 +146,11 @@ class GameStore {
     const game = this.emptyGame();
     this.setState({ game: game });
 
-    GameSource.updateCurrentGame(game, function(err, idunno) {
+    GameSource.newGame(function(err) {
     });
 
+    // GameSource.updateCurrentGame(game, function(err, idunno) {
+    // });
   }
 
   onFetchGame(game) {

@@ -27,7 +27,7 @@ const GameSource = {
     }
     else {
       return new Promise(function(resolve, reject) {
-        FirebaseDB.ref.child('currentGameId').once('value', function(snapshot) {  
+        FirebaseDB.ref.child('currentGameId').once('value', function(snapshot) {
           if (snapshot.exists()) {
             GameSource._currentGameId = snapshot.val();
             console.log('GameSource._currentGameId:', GameSource._currentGameId);
@@ -59,6 +59,18 @@ const GameSource = {
       GameSource.assignChangeListenerToCurrentGameRef();
     }
     return GameSource._currentGameRef;
+  },
+
+  newGame(done) {
+    FirebaseDB.ref.child('currentGameId').remove(function(err) {
+      if (err) {
+        console.log('Error removing currentGameId:', err);
+      }
+
+      GameSource._currentGameId = null;
+      GameSource._currentGame = null;
+      GameSource.getCurrentGame().then(done);
+    });
   },
 
   updateCurrentGame(data, done) {
