@@ -27,22 +27,24 @@ const UUID = require('../sources/uuid-source');
 
 const Main = React.createClass({
 
-  childContextTypes: {
-    muiTheme: React.PropTypes.object,
-  },
-
   getInitialState () {
     return {
       muiTheme: ThemeManager.getMuiTheme(LightRawTheme),
+      game: GameStore.emptyGame(),
       usersTabIndex: 0,
       movesTabIndex: 0,
-      game: GameStore.emptyGame(),
     };
+  },
+
+  childContextTypes: {
+    muiTheme: React.PropTypes.object,
+    game: React.PropTypes.object,
   },
 
   getChildContext() {
     return {
       muiTheme: this.state.muiTheme,
+      game: this.state.game,
     };
   },
 
@@ -60,8 +62,6 @@ const Main = React.createClass({
   },
 
   _onChange: function(arg) {
-    console.log("main _onChange:", arg)
-
     const game = GameStore.getState().game;
     this.setState({
       game: game,
@@ -115,7 +115,7 @@ const Main = React.createClass({
 
     return (
       <div className="container" style={containerStyle}>
-        <Scoreboard game={this.state.game}/>
+        <Scoreboard />
 
         <div className="row" style={{textAlign: 'center', marginTop:'8px'}}>
           <div className="col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">

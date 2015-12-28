@@ -1,5 +1,6 @@
 import FirebaseDB from './firebase-db';
 import UUID from './uuid-source';
+import moment from 'moment';
 
 // console.log("firebase FirebaseDB URL:", FirebaseDB.url);
 
@@ -9,6 +10,7 @@ const GameSource = {
   _currentGameRef: null,
   _gamesRef: null,
   _changeListener: null,
+  _serverTimeOffsetMillis: null,
 
   gamesRef() {
     if (!GameSource._gamesRef) {
@@ -67,18 +69,23 @@ const GameSource = {
     const ref = GameSource.currentGameRef();
     if (ref && GameSource._changeListener) {
       ref.off();
-      ref.on('child_added', function(snapshot) {
-        console.log("game child_added:", snapshot.key(), snapshot.val());
-        GameSource._changeListener(snapshot.key(), snapshot.val());
+      ref.on('value', function(snapshot) {
+        console.log("game changed");
+        GameSource._changeListener(snapshot.val());
       });
+
+      // ref.on('child_added', function(snapshot) {
+      //   console.log("game child_added:", snapshot.key(), snapshot.val());
+      //   GameSource._changeListener(snapshot.key(), snapshot.val());
+      // });
       ref.on('child_changed', function(snapshot) {
-        // console.log("game child_changed:", snapshot.key(), snapshot.val());      
-        GameSource._changeListener(snapshot.key(), snapshot.val());
+        console.log("game child_changed:", snapshot.key(), snapshot.val());      
+        // GameSource._changeListener(snapshot.key(), snapshot.val());
       });
-      ref.on('child_removed', function(snapshot) {
-        console.log("game child_removed:", snapshot.key(), snapshot.val());
-        GameSource._changeListener(snapshot.key(), snapshot.val(), { remove: true });
-      });
+      // ref.on('child_removed', function(snapshot) {
+      //   console.log("game child_removed:", snapshot.key(), snapshot.val());
+      //   GameSource._changeListener(snapshot.key(), snapshot.val(), { remove: true });
+      // });
     }
   },
 
@@ -92,7 +99,19 @@ const GameSource = {
 
     GameSource._changeListener = cb;
     GameSource.assignChangeListenerToCurrentGameRef();
-  },  
+  },
+
+  fetchServerTimeOffset() {
+    const offsetRef = FirebaseDB.ref.child('.info/serverTimeOffset');
+    offsetRef.on("value", function(snapshot) {
+      GameSource._serverTimeOffsetMillis = snapshot.val();
+      console.log('Fetched time offset:', GameSource._serverTimeOffsetMillis);
+    });
+  },
+
+  serverTimestampMillis() {
+    return (new Date().getTime() + GameSource._serverTimeOffsetMillis);
+  },
 
 };
 

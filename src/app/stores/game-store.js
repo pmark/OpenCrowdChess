@@ -6,22 +6,22 @@ const moment = require('moment');
 
 const EMPTY_GAME = {
   id: null,
-  lastMoveAt: null,
   turnColor: 'w',
   mainPlayer: { name: '' },
   fenHistory: null,
   sanHistory: null,
+  turnTimes: [],
   moveSuggestions: null,
   crowdPlayers: null,
   capturedPieces: { w: [], b: [] },
   scores: { w: 0, b: 0 },
   secondsRemaining: { w: 300, b: 300 },
+  firstMoveAt: null,
 };
 
 class GameStore {
   constructor() {
     this.game = this.emptyGame();
-    this.turnStartedAtMillis = Number(moment().format('x'));
 
     this.exportPublicMethods({
       getCurrentGame: this.getCurrentGame,
@@ -40,9 +40,6 @@ class GameStore {
     const colorThatPlayed = chessMove.color;
     const otherColor = ChessUtil.inverseTurnColor(colorThatPlayed);
 
-    console.log('store endTurn: game:', game);
-    console.log('chessMove:', chessMove);
-
     if (chessMove.captured) {
       game.capturedPieces = game.capturedPieces || {};
       game.capturedPieces[otherColor] = game.capturedPieces[otherColor] || [];
@@ -52,33 +49,32 @@ class GameStore {
       game.scores[colorThatPlayed] = ChessUtil.score(game.capturedPieces[otherColor]);
     }
 
+    game.firstMoveAt = game.firstMoveAt || Firebase.ServerValue.TIMESTAMP;
+
     game.sanHistory = game.sanHistory || [];
     game.sanHistory.push(chessMove.san);
-/*
-    if (colorThatPlayed === 'w') {
-      game.sanHistory.push(chessMove.san);
-    }
-    else {
-      let lastItem = game.sanHistory[game.sanHistory.length-1];
-      console.log(game.sanHistory.length-1, '------------lastItem:', lastItem, '\n\n')
-      lastItem = `${lastItem},${chessMove.san}`;
-      game.sanHistory[game.sanHistory.length-1] = lastItem;
-    }
-console.log('\n\ncolorThatPlayed', colorThatPlayed, game.sanHistory[game.sanHistory.length-1])
-*/
 
     game.fenHistory = game.fenHistory || [];
     game.fenHistory.push(fen);
+
     game.moveSuggestions = [];
     game.turnColor = otherColor;
-    game.lastMoveAt = moment().toString();
 
-    const secondsSinceTurnStarted = moment().diff(moment(Number(this.turnStartedAtMillis)), 'milliseconds') / 1000;
-    console.log('secondsSinceTurnStarted', secondsSinceTurnStarted);
+    game.turnTimes = game.turnTimes || [];
+    const lastTurnTime = game.turnTimes[game.turnTimes.length-1];
+    const serverTimestamp = GameSource.serverTimestampMillis();
+    const elapsedSeconds = parseInt((lastTurnTime ? (serverTimestamp - lastTurnTime.endedAt) : 0) / 100) / 10;
 
-    console.log('1  game.secondsRemaining[colorThatPlayed]', game.secondsRemaining[colorThatPlayed]);
-    game.secondsRemaining[colorThatPlayed] = Math.max(0, Number(game.secondsRemaining[colorThatPlayed]) - secondsSinceTurnStarted);
-    console.log('2  game.secondsRemaining[colorThatPlayed]', game.secondsRemaining[colorThatPlayed]);
+    game.turnTimes.push({
+      endedAt: serverTimestamp,
+      turnColor: colorThatPlayed,
+      elapsed: elapsedSeconds,
+    });
+
+    if (elapsedSeconds > 0) {
+      game.secondsRemaining[colorThatPlayed] = Math.max(0, Number(game.secondsRemaining[colorThatPlayed]) - elapsedSeconds);
+      console.log('--- game.secondsRemaining', colorThatPlayed, game.secondsRemaining[colorThatPlayed]);
+    }
 
     this.setState({ game: game });
 
@@ -86,10 +82,6 @@ console.log('\n\ncolorThatPlayed', colorThatPlayed, game.sanHistory[game.sanHist
       console.log('onEndTurn updateCurrentGame:', err, idunno);
     });
   }
-
-  // inverseTurnColor() {
-  //   return ChessUtil.inverseTurnColor(this.state.turnColor);
-  // }
 
   whiteTurn() {
     return (this.state.game.turnColor === 'w');
@@ -100,11 +92,10 @@ console.log('\n\ncolorThatPlayed', colorThatPlayed, game.sanHistory[game.sanHist
   }
 
   computeScoresFromTaken() {
-    console.log('computeScoresFromTaken:', this.state)
     this.setState({
       scores: {
-        white: ChessUtil.score(this.state.capturedPieces['w']),
-        black: ChessUtil.score(this.state.capturedPieces['b']),
+        w: ChessUtil.score(this.state.capturedPieces['w']),
+        b: ChessUtil.score(this.state.capturedPieces['b']),
       },
     });
   }
@@ -124,7 +115,6 @@ console.log('\n\ncolorThatPlayed', colorThatPlayed, game.sanHistory[game.sanHist
   onUpdateGame(game) {
     game = this.sanitizeGame(game);
     this.setState({game: game});
-    console.log('onUpdateGame:', game);
     this.errorMessage = null;
     // optionally return false to suppress the store change event
   }
@@ -133,9 +123,7 @@ console.log('\n\ncolorThatPlayed', colorThatPlayed, game.sanHistory[game.sanHist
     const game = this.emptyGame();
     this.setState({ game: game });
 
-    console.log('reset!!', game);
     GameSource.updateCurrentGame(game, function(err, idunno) {
-      console.log('self:', self, 'onResetGame update:', err, idunno);
     });
 
   }
@@ -150,11 +138,17 @@ console.log('\n\ncolorThatPlayed', colorThatPlayed, game.sanHistory[game.sanHist
     this.errorMessage = errorMessage;
   }
 
-  onSourceChange(key, newValue, options={}) {
+  onSourceChange(newValue, options={}) {
+    this.setState({
+      game: this.sanitizeGame(newValue),
+    });
+  }
+/*
+  onSourceKeyChange(key, newValue, options={}) {
     // console.log('onSourceChange this', this, '\n\nkey:', key, 'from', this[key], 'to', newValue)
     console.log('new', key);
     const game = this.game;
-    let tmpTurnStartedAtMillis = this.turnStartedAtMillis;
+    let tmpTurnStartedAt = this.turnStartedAt;
 
     if (options && options.remove) {
       delete game[key];
@@ -163,18 +157,20 @@ console.log('\n\ncolorThatPlayed', colorThatPlayed, game.sanHistory[game.sanHist
       const oldValue = game[key];
 
       if (key === 'turnColor') {
-        tmpTurnStartedAtMillis = Number(moment().format('x'));
         console.log("\n\nNEW TURN!\n\n");
+        tmpTurnStartedAt = Number(moment().format('x'));
       }
 
       game[key] = newValue;
     }
 
     this.setState({
-      game: this.sanitizeGame(game),
-      turnStartedAtMillis: tmpTurnStartedAtMillis,
+      // game: this.sanitizeGame(game),
+      turnStartedAt: tmpTurnStartedAt,
     });
   }
+*/
+
 }
 
 module.exports = alt.createStore(GameStore, 'GameStore');

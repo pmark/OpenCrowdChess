@@ -9,18 +9,26 @@ let ticker = null;
 const Clock = React.createClass({
 
   getInitialState () {
-    return {
-      millis: this.props.seconds * 1000,
-      ticker: null,
-    };
+    return this.stateWithProps(this.props);
+  },
+
+  contextTypes: {
+    game: React.PropTypes.object,
   },
 
   componentDidMount() {
     ticker = setInterval(this.tick, TICK_INTERVAL);
   },
 
-  componentWillReceiveProps(newProps, ) {
-    this.setState({ millis: newProps.seconds * 1000});
+  componentWillReceiveProps(newProps, newContext) {
+    this.setState(this.stateWithProps(newProps));
+  },
+
+  stateWithProps(deezProps) {
+    return {
+      millis: (this.context.game.secondsRemaining[deezProps.color] * 1000),
+      running: (this.context.game.turnColor === deezProps.color && this.context.game.fenHistory && this.context.game.fenHistory.length > 0),
+    }
   },
 
   render() {
@@ -54,7 +62,7 @@ const Clock = React.createClass({
   },
 
   tick() {
-    if (this.props.running) {
+    if (this.state.running) {
       let newTime = this.state.millis - TICK_INTERVAL;
       if (newTime < 0) {
         newTime = 0;

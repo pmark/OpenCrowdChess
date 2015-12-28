@@ -17,6 +17,8 @@ class GameActions {
     // we dispatch an event here so we can have "loading" state.
     this.dispatch();
 
+    GameSource.fetchServerTimeOffset();
+
     GameSource.getCurrentGame().then((game) => {
         // we can access other actions within our action through `this.actions`
         this.actions.updateGame(game);
