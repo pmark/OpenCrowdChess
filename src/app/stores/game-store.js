@@ -17,6 +17,9 @@ const EMPTY_GAME = {
   scores: { w: 0, b: 0 },
   secondsRemaining: { w: 300, b: 300 },
   firstMoveAt: null,
+  winner: null,
+  draw: null,
+  check: false,
 };
 
 class GameStore {
@@ -35,7 +38,7 @@ class GameStore {
   }
 
   onEndTurn(data) {
-    const {chessMove, fen} = data;
+    const { chessMove, fen, status } = data;
     const game = this.game;
     const colorThatPlayed = chessMove.color;
     const otherColor = ChessUtil.inverseTurnColor(colorThatPlayed);
@@ -73,7 +76,27 @@ class GameStore {
 
     if (elapsedSeconds > 0) {
       game.secondsRemaining[colorThatPlayed] = Math.max(0, Number(game.secondsRemaining[colorThatPlayed]) - elapsedSeconds);
-      console.log('--- game.secondsRemaining', colorThatPlayed, game.secondsRemaining[colorThatPlayed]);
+    }
+
+    game.winner = status.winner;
+    game.check = status.check;
+    game.checkmate = status.checkmate;
+    game.draw = status.draw;
+
+    if (status.check) {
+      console.log('check!')
+    }
+
+    if (status.checkmate) {
+      console.log('checkmate!')
+    }
+
+    if (status.winner) {
+      console.log('winner:', status.winner)
+    }
+    
+    if (status.draw) {
+      console.log('draw!')
     }
 
     this.setState({ game: game });

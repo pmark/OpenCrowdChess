@@ -45,7 +45,13 @@ class GameActions {
 
   pieceMoved(move) {
     let nextPlayer;
-    let status;
+    const status = {
+      draw: false,
+      check: false,
+      checkmate: false,
+      winner: null,
+    };
+
     let chessMove = __chess.move({
       from: move.from,
       to: move.to,
@@ -56,21 +62,20 @@ class GameActions {
 
     if (chessMove !== null) {
       if (__chess.in_checkmate() === true) {
-        status = 'CHECKMATE! Player ' + nextPlayer + ' lost.';
+        status.checkmate = true;
+        status.winner = __chess.turn();
       }
       else if (__chess.in_draw() === true) {
-        status = 'DRAW!';
+        status.draw = true;
       }
       else {
-        status = 'Next player is ' + nextPlayer + '.';
-
         if (__chess.in_check() === true) {
-          status = 'CHECK! ' + status;        
+          status.check = true;
         }
       }
-
-      // updateGameInfo(status);      
     }
+
+    console.log('status:', status)
 
     const fen = __chess.fen();
     
@@ -81,15 +86,14 @@ class GameActions {
     // __chess.fen = fen;
     // __chess.lastMove = chessMove;
 
-
     // TODO: Show move confirmation instead of ending move right away.
-    this.actions.endTurn(chessMove, fen);
+    this.actions.endTurn(chessMove, fen, status);
 
     return fen;
   }
 
-  endTurn(chessMove, fen) {
-    this.dispatch({ chessMove: chessMove, fen: fen });
+  endTurn(chessMove, fen, status, winner) {
+    this.dispatch({ chessMove: chessMove, fen: fen, status: status, winner: winner });
   }
 
   pieceSelected(notationSquare) {
