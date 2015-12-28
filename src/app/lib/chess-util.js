@@ -22,6 +22,10 @@ const ChessUtil = {
       ChessUtil.capturedCount(capturedPieces, 'p') * 1;
   },
 
+  colorName(colorCode) {
+    return (colorCode === 'w' ? 'White' : 'Black');
+  },
+
 };
 
 export default ChessUtil;

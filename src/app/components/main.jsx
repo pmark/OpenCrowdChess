@@ -24,6 +24,7 @@ const Scoreboard = require('./scoreboard');
 const PlayerTable = require('./player-table');
 const SpectatorTable = require('./spectator-table');
 const UUID = require('../sources/uuid-source');
+const ChessUtil = require('../lib/chess-util');
 
 const Main = React.createClass({
 
@@ -113,6 +114,24 @@ const Main = React.createClass({
 
     const tabContentHeight = '180px';
 
+    let statusText = null;
+
+    const g = this.state.game;
+    const turnColorName = ChessUtil.colorName(g.turnColor);
+
+    if (g.check) {
+      statusText = `Check! ${turnColorName}'s turn.`;
+    }
+    else if (g.checkmate) {
+      statusText = `Checkmate! ${ChessUtil.colorName(g.winner)} wins.`;
+    }
+    else if (g.draw) {
+      statusText = 'Game ended in a draw.';
+    }
+    else {
+      statusText = `${turnColorName}'s turn.`;      
+    }
+
     return (
       <div className="container" style={containerStyle}>
         <Scoreboard />
@@ -125,7 +144,7 @@ const Main = React.createClass({
 
         <div className="row">
           <div className="col-xs-12">
-            <h2>Move a piece to start playing.</h2>
+            <h2>{ statusText }</h2>
           </div>
         </div>
 

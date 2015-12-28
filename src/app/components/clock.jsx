@@ -26,8 +26,16 @@ const Clock = React.createClass({
   },
 
   stateWithProps(deezProps) {
-    const running = (this.context.game.turnColor === deezProps.color && this.context.game.fenHistory && this.context.game.fenHistory.length > 0);
-    let secondsRemaining = this.context.game.secondsRemaining[deezProps.color];
+    const g = this.context.game;
+    let running = (
+      g.turnColor === deezProps.color && 
+      g.fenHistory && 
+      g.fenHistory.length > 0 &&
+      !g.draw &&
+      !g.checkmate
+    );
+
+    let secondsRemaining = g.secondsRemaining[deezProps.color];
 
     if (running) {
       let serverTimestamp = GameSource.serverTimestampMillis();
@@ -36,14 +44,14 @@ const Clock = React.createClass({
         serverTimestamp = 0;
       }
 
-      const lastTurnTime = this.context.game.turnTimes[this.context.game.turnTimes.length-1];
+      const lastTurnTime = g.turnTimes[g.turnTimes.length-1];
       const elapsedSeconds = Number(lastTurnTime ? (serverTimestamp - lastTurnTime.endedAt) : 0) / 1000;
       secondsRemaining = secondsRemaining - elapsedSeconds;
-
-      console.log('elapsedSeconds:', elapsedSeconds, 'secondsRemaining:', secondsRemaining);     
     }
 
     secondsRemaining = Math.max(0, secondsRemaining);
+
+    if (secondsRemaining === 0) { running = false; }
 
     return {
       millis: (secondsRemaining * 1000),
@@ -58,7 +66,7 @@ const Clock = React.createClass({
     const ss = parseInt(seconds, 10);
     let t = null;
     const eoClass = (isEven(ss) ? 'even' : 'odd');
-    const clockClasses = `clock ${eoClass}`;
+    const clockClasses = `clock ${eoClass} ${this.state.running ? 'running' : ''}`;
     const zeroPaddedSeconds = (ss < 10 && mm > 0) ? `0${ss}` : ss;
     const jsxSeconds = (<strong>{ zeroPaddedSeconds }</strong>);
     const jsxMinutes = (minutes < 1) ? '' : (<strong>{ mm }</strong>);

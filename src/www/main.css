@@ -12,6 +12,14 @@ table.centered-table-text tr td {
 	text-align: center !important;
 }
 
+.clock {
+	background-color: lightgray !important;
+}
+
+.clock.running {
+	background-color: white !important;
+}
+
 .clock .separator {
 	text-align: center;
 	width: 0.5em;
@@ -25,3 +33,4 @@ table.centered-table-text tr td {
 .clock.odd .separator {
 	color: darkgray;
 }
+
