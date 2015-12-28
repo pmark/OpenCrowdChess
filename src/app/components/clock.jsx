@@ -2,6 +2,7 @@
 
 const React = require('react');
 const Paper = require('material-ui/lib/paper');
+const GameSource = require('../sources/game-source');
 
 const TICK_INTERVAL = 100;
 let ticker = null;
@@ -25,9 +26,28 @@ const Clock = React.createClass({
   },
 
   stateWithProps(deezProps) {
+    const running = (this.context.game.turnColor === deezProps.color && this.context.game.fenHistory && this.context.game.fenHistory.length > 0);
+    let secondsRemaining = this.context.game.secondsRemaining[deezProps.color];
+
+    if (running) {
+      let serverTimestamp = GameSource.serverTimestampMillis();
+      if (serverTimestamp === null) {
+        console.log('\n\nClock: serverTimestamp is null!!\n\n')
+        serverTimestamp = 0;
+      }
+
+      const lastTurnTime = this.context.game.turnTimes[this.context.game.turnTimes.length-1];
+      const elapsedSeconds = Number(lastTurnTime ? (serverTimestamp - lastTurnTime.endedAt) : 0) / 1000;
+      secondsRemaining = secondsRemaining - elapsedSeconds;
+
+      console.log('elapsedSeconds:', elapsedSeconds, 'secondsRemaining:', secondsRemaining);     
+    }
+
+    secondsRemaining = Math.max(0, secondsRemaining);
+
     return {
-      millis: (this.context.game.secondsRemaining[deezProps.color] * 1000),
-      running: (this.context.game.turnColor === deezProps.color && this.context.game.fenHistory && this.context.game.fenHistory.length > 0),
+      millis: (secondsRemaining * 1000),
+      running: running,
     }
   },
 
