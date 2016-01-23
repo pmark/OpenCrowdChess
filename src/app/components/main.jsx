@@ -83,9 +83,10 @@ const Main = React.createClass({
     }
     __board.setPosition(fen);
 
-    if (game.checkmate) {
-      clearInterval(nextGameCountdownTicker);
-      nextGameCountdownTicker = setInterval(this._nextGameCountdownTick, 1000);
+    if (game.checkmate || game.draw) {
+      if (!nextGameCountdownTicker) {
+        nextGameCountdownTicker = setInterval(this._nextGameCountdownTick, 1000);
+      }
     }
   },
 
