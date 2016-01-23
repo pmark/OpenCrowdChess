@@ -26,6 +26,9 @@ const SpectatorTable = require('./spectator-table');
 const UUID = require('../sources/uuid-source');
 const ChessUtil = require('../lib/chess-util');
 
+const NEXT_GAME_TRANSITION_SEC = 5;
+let nextGameCountdownTicker = null;
+
 const Main = React.createClass({
 
   getInitialState () {
@@ -34,6 +37,7 @@ const Main = React.createClass({
       game: GameStore.emptyGame(),
       usersTabIndex: 0,
       movesTabIndex: 0,
+      nextGameCountdown: NEXT_GAME_TRANSITION_SEC,
     };
   },
 
@@ -78,6 +82,11 @@ const Main = React.createClass({
       __chess = new Chess();
     }
     __board.setPosition(fen);
+
+    if (game.checkmate) {
+      clearInterval(nextGameCountdownTicker);
+      nextGameCountdownTicker = setInterval(this._nextGameCountdownTick, 1000);
+    }
   },
 
   componentWillMount() {
@@ -106,6 +115,30 @@ const Main = React.createClass({
     this.setState({ usersTabIndex: parseInt(arg, 10) });
   },
 
+  _nextGameCountdownTick() {
+    let value = this.state.nextGameCountdown;
+
+    if (parseInt(value) === 0) {
+      value = NEXT_GAME_TRANSITION_SEC + 1;
+    }
+
+    value = value - 1;
+
+    this.setState({ 
+      nextGameCountdown: value,
+    });
+
+    if (value <= 0) {
+      clearInterval(nextGameCountdownTicker);
+      nextGameCountdownTicker = null;
+
+      // transition now
+      // How? Clear current game ID
+      GameActions.beginNewGame();
+    }
+
+  },
+
   render() {
     const containerStyle = {
       textAlign: 'center',
@@ -115,6 +148,7 @@ const Main = React.createClass({
     const tabContentHeight = '180px';
 
     let statusText = null;
+    let substatusText = null;
 
     const g = this.state.game;
     const turnColorName = ChessUtil.colorName(g.turnColor);
@@ -124,6 +158,7 @@ const Main = React.createClass({
     }
     else if (g.checkmate) {
       statusText = `Checkmate! ${ChessUtil.colorName(g.winner)} wins.`;
+      substatusText = `Next game starts in ${this.state.nextGameCountdown}`;
     }
     else if (g.draw) {
       statusText = 'Game ended in a draw.';
@@ -145,6 +180,7 @@ const Main = React.createClass({
         <div className="row">
           <div className="col-xs-12">
             <h2>{ statusText }</h2>
+            {substatusText}
           </div>
         </div>
 

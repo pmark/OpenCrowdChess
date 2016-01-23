@@ -37,7 +37,7 @@ const Scoreboard = React.createClass({
 
         <div className="row scores">
           <div className="col-xs-3 col-sm-offset-2 col-sm-2 col-lg-offset-2 col-lg-2">
-            <Clock color={'w'}/>
+            {/* <Clock color={'w'}/> */}
           </div>
           <div className="col-xs-3 col-sm-2">
             <h3>{scores['w']}</h3>
@@ -46,7 +46,7 @@ const Scoreboard = React.createClass({
             <h3>{scores['b']}</h3>
           </div>
           <div className="col-xs-3 col-sm-2">
-            <Clock color={'b'} />
+            {/* <Clock color={'b'} > */}
           </div>
         </div>
 

@@ -43,6 +43,11 @@ class GameActions {
     this.dispatch();
   }
 
+  beginNewGame() {
+    console.log('beginNewGame');
+    this.dispatch();
+  }
+
   clockExpired(color) {
     console.log('clock expired!', color);
   }

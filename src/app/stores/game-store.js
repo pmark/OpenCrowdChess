@@ -148,9 +148,14 @@ class GameStore {
 
     GameSource.newGame(function(err) {
     });
+  }
 
-    // GameSource.updateCurrentGame(game, function(err, idunno) {
-    // });
+  onBeginNewGame() {
+    const game = this.emptyGame();
+    this.setState({ game: game });
+
+    GameSource.newGame(function(err) {
+    });
   }
 
   onFetchGame(game) {
