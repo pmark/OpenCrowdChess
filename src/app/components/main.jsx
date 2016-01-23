@@ -187,7 +187,7 @@ const Main = React.createClass({
 
         <div className="row">
           <div className="col-sm-offset-1 col-sm-5 col-md-offset-2 col-md-4">
-            <Paper style={{backgroundColor: '#dfdfdf', margin: '20px 0'}}>
+            <Paper style={{backgroundColor: '#afafaf', margin: '20px 0'}}>
               <Tabs 
                   onChange={this._handleChangeMovesTabs} 
                   inkBarStyle={{backgroundColor: 'black'}}
@@ -208,7 +208,7 @@ const Main = React.createClass({
           </div>
 
           <div className="col-sm-5 col-md-4">
-            <Paper style={{backgroundColor: '#dfdfdf', margin: '20px 0'}}>
+            <Paper style={{backgroundColor: '#afafaf', margin: '20px 0'}}>
               <Tabs 
                   onChange={this._handleChangeUsersTabs} 
                   inkBarStyle={{backgroundColor: 'black'}}

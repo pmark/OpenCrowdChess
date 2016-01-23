@@ -12,7 +12,10 @@ const TableRowColumn = require('material-ui/lib/table/table-row-column');
 const MoveSuggestionsRow = React.createClass({
     render: function() {
         return (
-          <TableRow selected={false}>
+          <TableRow
+            key={this.props.san}
+            displayBorder={true}
+            selectable={true}>
             <TableRowColumn>{this.props.san}</TableRowColumn>
             <TableRowColumn>{this.props.votes}</TableRowColumn>
           </TableRow>
@@ -23,7 +26,19 @@ const MoveSuggestionsRow = React.createClass({
 const MoveSuggestions = React.createClass({
 
   getInitialState () {
-    return { };
+    return {
+      fixedHeader: true,
+      fixedFooter: true,
+      selectable: true,
+      multiSelectable: false,
+      enableSelectAll: false,
+      displaySelectAll: false,
+
+      stripedRows: false,
+      deselectOnClickaway: false,
+      showRowHover: false,
+      displayRowCheckbox: true,
+    };
   },
 
   contextTypes: {
@@ -44,21 +59,11 @@ const MoveSuggestions = React.createClass({
   },
 
   render() {
-
-    const center = {textAlign: 'center'};
     let rows = null;
-
-    // TODO: Allow crowd to be black
     let suggestions = this.context.game.moveSuggestions['w'];
-    console.log('MoveSuggestions:', suggestions);
-
     if (suggestions) {
-      const sorted = suggestions.sort(function(a, b) {
+      rows = suggestions.sort(function(a, b) {
         return b.votes - a.votes;
-      });
-
-      rows = sorted.map(function(item, index) {
-        return <MoveSuggestionsRow key={index} san={item.san} votes={item.votes} />;
       });
     }
 
@@ -69,24 +74,32 @@ const MoveSuggestions = React.createClass({
         fixedFooter={true}
         selectable={true}
         multiSelectable={false}
-        className='centered-table-text'
         onRowSelection={this.onRowSelection}>
-        <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
+        <TableHeader displaySelectAll={false} enableSelectAll={false}  adjustForCheckbox={true}>
           <TableRow>
-            <TableHeaderColumn>
+            <TableHeaderColumn className="center">
               Move
             </TableHeaderColumn>
-            <TableHeaderColumn>
+            <TableHeaderColumn className="center">
               Votes
             </TableHeaderColumn>
            </TableRow>
         </TableHeader>
         <TableBody
-          deselectOnClickaway={true}
+          deselectOnClickaway={false}
           showRowHover={true}
-          displayRowCheckbox={false}
-          stripedRows={true}>
-          {rows}
+          displayRowCheckbox={true}
+          preScanRows={false}
+          stripedRows={false}>
+          {rows && rows.map(function(row) {
+            return <TableRow
+              key={row.san}
+              displayBorder={true}
+              selectable={true}>
+              <TableRowColumn className="center">{row.san}</TableRowColumn>
+              <TableRowColumn className="center">{row.votes}</TableRowColumn>
+            </TableRow>
+          })}
         </TableBody>
       </Table>  
     );

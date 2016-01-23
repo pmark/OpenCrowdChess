@@ -52,7 +52,7 @@ const PlayerTable = React.createClass({
           deselectOnClickaway={true}
           showRowHover={true}
           displayRowCheckbox={false}
-          stripedRows={true}>
+          stripedRows={false}>
           <TableRow selected={false}>
             <TableRowColumn>Joe Bishop</TableRowColumn>
             <TableRowColumn>Denver</TableRowColumn>

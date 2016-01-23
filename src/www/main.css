@@ -12,6 +12,11 @@ table.centered-table-text tr td {
 	text-align: center !important;
 }
 
+table tr th.center,
+table tr td.center {
+	text-align: center !important;
+}
+
 .clock {
 	background-color: lightgray !important;
 }

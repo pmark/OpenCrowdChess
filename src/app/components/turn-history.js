@@ -12,7 +12,7 @@ const TableRowColumn = require('material-ui/lib/table/table-row-column');
 const TurnHistoryRow = React.createClass({
     render: function() {
         return (
-          <TableRow selected={false}>
+          <TableRow selected={false} key={this.props.turnNumber}>
             <TableRowColumn>{this.props.turnNumber}</TableRowColumn>
             <TableRowColumn>{this.props.white}</TableRowColumn>
             <TableRowColumn>{this.props.black}</TableRowColumn>
@@ -37,7 +37,7 @@ const TurnHistory = React.createClass({
   },
 
   onRowSelection(indexes) {
-    console.log("onRowSelection", indexes[0]);
+    console.log("history move selected:", indexes[0]);
   },
 
   render() {
@@ -63,7 +63,13 @@ const TurnHistory = React.createClass({
         const white = wb[0];
         const black = wb[1];
         const turnNumber = (moveCount - index);
-        return <TurnHistoryRow key={index} turnNumber={turnNumber} white={white} black={black} />;
+        // return <TurnHistoryRow key={index} turnNumber={turnNumber} white={white} black={black} />;
+        return {
+          key: index,
+          turnNumber: turnNumber,
+          white: white,
+          black: black,
+        }
       });
     }
 
@@ -76,7 +82,7 @@ const TurnHistory = React.createClass({
         multiSelectable={false}
         className='centered-table-text'
         onRowSelection={this.onRowSelection}>
-        <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
+        <TableHeader displaySelectAll={false} enableSelectAll={false} adjustForCheckbox={false}>
           <TableRow>
             <TableHeaderColumn>
               Turn
@@ -90,11 +96,17 @@ const TurnHistory = React.createClass({
            </TableRow>
         </TableHeader>
         <TableBody
-          deselectOnClickaway={true}
+          deselectOnClickaway={false}
           showRowHover={true}
           displayRowCheckbox={false}
           stripedRows={true}>
-          {rows}
+          {rows && rows.map(function(item, index) {
+            return <TableRow key={item.key}>
+              <TableRowColumn>{item.turnNumber}</TableRowColumn>
+              <TableRowColumn>{item.white}</TableRowColumn>
+              <TableRowColumn>{item.black}</TableRowColumn>
+            </TableRow>
+          })}
         </TableBody>
       </Table>  
     );

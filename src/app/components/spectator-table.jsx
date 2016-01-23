@@ -52,7 +52,7 @@ const SpectatorTable = React.createClass({
           deselectOnClickaway={true}
           showRowHover={true}
           displayRowCheckbox={false}
-          stripedRows={true}>
+          stripedRows={false}>
           <TableRow selected={false}>
             <TableRowColumn>Akaylee</TableRowColumn>
             <TableRowColumn>Portland</TableRowColumn>
