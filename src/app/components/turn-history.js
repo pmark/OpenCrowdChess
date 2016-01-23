@@ -67,7 +67,6 @@ const TurnHistory = React.createClass({
       });
     }
 
-
     return (
       <Table
         height={this.props.height}

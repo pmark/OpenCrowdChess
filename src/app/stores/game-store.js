@@ -11,7 +11,7 @@ const EMPTY_GAME = {
   fenHistory: null,
   sanHistory: null,
   turnTimes: [],
-  moveSuggestions: null,
+  moveSuggestions: { w: [ { san: 'e4', votes: 10 }, { san: 'd4', votes: 7 } ], b: [] },
   crowdPlayers: null,
   capturedPieces: { w: [], b: [] },
   scores: { w: 0, b: 0 },
@@ -60,7 +60,7 @@ class GameStore {
     game.fenHistory = game.fenHistory || [];
     game.fenHistory.push(fen);
 
-    game.moveSuggestions = [];
+    // game.moveSuggestions = [];
     game.turnColor = otherColor;
 
     game.turnTimes = game.turnTimes || [];

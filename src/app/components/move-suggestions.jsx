@@ -9,10 +9,25 @@ const TableHeaderColumn = require('material-ui/lib/table/table-header-column');
 const TableRow = require('material-ui/lib/table/table-row');
 const TableRowColumn = require('material-ui/lib/table/table-row-column');
 
+const MoveSuggestionsRow = React.createClass({
+    render: function() {
+        return (
+          <TableRow selected={false}>
+            <TableRowColumn>{this.props.san}</TableRowColumn>
+            <TableRowColumn>{this.props.votes}</TableRowColumn>
+          </TableRow>
+        );
+    },
+});
+
 const MoveSuggestions = React.createClass({
 
   getInitialState () {
-    return { turns: [] };
+    return { };
+  },
+
+  contextTypes: {
+    game: React.PropTypes.object,
   },
 
   componentDidMount() {
@@ -31,6 +46,21 @@ const MoveSuggestions = React.createClass({
   render() {
 
     const center = {textAlign: 'center'};
+    let rows = null;
+
+    // TODO: Allow crowd to be black
+    let suggestions = this.context.game.moveSuggestions['w'];
+    console.log('MoveSuggestions:', suggestions);
+
+    if (suggestions) {
+      const sorted = suggestions.sort(function(a, b) {
+        return b.votes - a.votes;
+      });
+
+      rows = sorted.map(function(item, index) {
+        return <MoveSuggestionsRow key={index} san={item.san} votes={item.votes} />;
+      });
+    }
 
     return (
       <Table
@@ -44,10 +74,10 @@ const MoveSuggestions = React.createClass({
         <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
           <TableRow>
             <TableHeaderColumn>
-              Votes
+              Move
             </TableHeaderColumn>
             <TableHeaderColumn>
-              Move
+              Votes
             </TableHeaderColumn>
            </TableRow>
         </TableHeader>
@@ -56,26 +86,7 @@ const MoveSuggestions = React.createClass({
           showRowHover={true}
           displayRowCheckbox={false}
           stripedRows={true}>
-          <TableRow selected={false}>
-            <TableRowColumn>25</TableRowColumn>
-            <TableRowColumn>e4</TableRowColumn>
-          </TableRow>
-          <TableRow>
-            <TableRowColumn>14</TableRowColumn>
-            <TableRowColumn>Nf3</TableRowColumn>
-          </TableRow>
-          <TableRow>
-            <TableRowColumn>10</TableRowColumn>
-            <TableRowColumn>a6</TableRowColumn>
-          </TableRow>
-          <TableRow>
-            <TableRowColumn>10</TableRowColumn>
-            <TableRowColumn>a6</TableRowColumn>
-          </TableRow>
-          <TableRow>
-            <TableRowColumn>10</TableRowColumn>
-            <TableRowColumn>a6</TableRowColumn>
-          </TableRow>
+          {rows}
         </TableBody>
       </Table>  
     );
