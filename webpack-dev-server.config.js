@@ -51,20 +51,20 @@ var config = {
   ],
   module: {
     //Loaders to interpret non-vanilla javascript code as well as most other extensions including images and text.
-    preLoaders: [
-      {
-        //Eslint loader
-        test: /\.(js|jsx)$/,
-        loader: 'eslint-loader',
-        include: [path.resolve(__dirname, "src/app")],
-        exclude: [nodeModulesPath]
-      },
-    ],
+    // preLoaders: [
+    //   {
+    //     //Eslint loader
+    //     test: /\.(js|jsx)$/,
+    //     loader: 'eslint-loader',
+    //     include: [path.resolve(__dirname, "src/app")],
+    //     exclude: [nodeModulesPath]
+    //   },
+    // ],
     loaders: [
       {
         //React-hot loader and
         test: /\.(js|jsx)$/,  //All .js and .jsx files
-        loaders: ['react-hot','babel-loader?optional=runtime&stage=0'], //react-hot is like browser sync and babel loads jsx and es6-7
+        loaders: ['react-hot','babel-loader'], //react-hot is like browser sync and babel loads jsx and es6-7
         exclude: [nodeModulesPath]
       }
     ]

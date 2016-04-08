@@ -34,7 +34,7 @@ class GameStore {
     });
     
     this.bindActions(GameActions);
-    GameSource.setChangeListener(this.onSourceChange.bind(this));
+    // GameSource.setChangeListener(this.onSourceChange.bind(this));
   }
 
   onEndTurn(data) {

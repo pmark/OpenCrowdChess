@@ -1,5 +1,5 @@
 {
-  "firebase": "opencrowdchess",
+  "firebase": "occ",
   "public": "build",
   "ignore": [
     "firebase.json",

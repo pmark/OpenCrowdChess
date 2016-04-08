@@ -1,6 +1,5 @@
 'use strict';
-/*eslint no-var: 0 */
-/*eslint comma-dangle: 0 */
+/*eslint-disable-file*/
 
 
 /*
