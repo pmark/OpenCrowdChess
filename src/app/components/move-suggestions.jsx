@@ -1,32 +1,37 @@
-/** In this file, we create a React component which incorporates components provided by material-ui */
+import React from 'react';
 
-const React = require('react');
-const Table = require('material-ui/lib/table/table');
-const TableBody = require('material-ui/lib/table/table-body');
-const TableFooter = require('material-ui/lib/table/table-footer');
-const TableHeader = require('material-ui/lib/table/table-header');
-const TableHeaderColumn = require('material-ui/lib/table/table-header-column');
-const TableRow = require('material-ui/lib/table/table-row');
-const TableRowColumn = require('material-ui/lib/table/table-row-column');
+import {
+    Table,
+    TableBody,
+    TableRow,
+    TableRowColumn,
+    TableHeader,
+    TableHeaderColumn,
+} from 'material-ui';
 
-const MoveSuggestionsRow = React.createClass({
-    render: function() {
-        return (
-          <TableRow
-            key={this.props.san}
-            displayBorder={true}
-            selectable={true}>
-            <TableRowColumn>{this.props.san}</TableRowColumn>
-            <TableRowColumn>{this.props.votes}</TableRowColumn>
-          </TableRow>
-        );
-    },
-});
+export default class MoveSuggestionsRow extends React.Component {
+  static propTypes = {
+    san: React.PropTypes.string,
+    votes: React.PropTypes.number,
+  }
 
-const MoveSuggestions = React.createClass({
+  render() {
+      return (
+        <TableRow
+          key={this.props.san}
+          displayBorder
+          selectable>
+          <TableRowColumn>{this.props.san}</TableRowColumn>
+          <TableRowColumn>{this.props.votes}</TableRowColumn>
+        </TableRow>
+      );
+  }
+}
 
-  getInitialState () {
-    return {
+export default class MoveSuggestions extends React.Component {
+  constructor() {
+    super();
+    this.state = {
       fixedHeader: true,
       fixedFooter: true,
       selectable: true,
@@ -39,28 +44,23 @@ const MoveSuggestions = React.createClass({
       showRowHover: false,
       displayRowCheckbox: true,
     };
-  },
+  }
 
-  contextTypes: {
+  static propTypes = {
+    height: React.PropTypes.string,
+  }
+
+  static contextTypes = {
     game: React.PropTypes.object,
-  },
-
-  componentDidMount() {
-  },
-
-  componentWillMount() {
-  },
-
-  componentWillUnmount() {
-  },
+  }
 
   onRowSelection(indexes) {
     console.log("onRowSelection", indexes[0]);
-  },
+  }
 
   render() {
     let rows = null;
-    let suggestions = this.context.game.moveSuggestions['w'];
+    const suggestions = (this.context.game && this.context.game.moveSuggestions ? this.context.game.moveSuggestions.w : []);
     if (suggestions) {
       rows = suggestions.sort(function(a, b) {
         return b.votes - a.votes;
@@ -70,12 +70,12 @@ const MoveSuggestions = React.createClass({
     return (
       <Table
         height={this.props.height}
-        fixedHeader={true}
-        fixedFooter={true}
-        selectable={true}
+        fixedHeader
+        fixedFooter
+        selectable
         multiSelectable={false}
         onRowSelection={this.onRowSelection}>
-        <TableHeader displaySelectAll={false} enableSelectAll={false}  adjustForCheckbox={true}>
+        <TableHeader displaySelectAll={false} enableSelectAll={false}  adjustForCheckbox>
           <TableRow>
             <TableHeaderColumn className="center">
               Move
@@ -83,19 +83,19 @@ const MoveSuggestions = React.createClass({
             <TableHeaderColumn className="center">
               Votes
             </TableHeaderColumn>
-           </TableRow>
+          </TableRow>
         </TableHeader>
         <TableBody
           deselectOnClickaway={false}
-          showRowHover={true}
-          displayRowCheckbox={true}
+          showRowHover
+          displayRowCheckbox
           preScanRows={false}
           stripedRows={false}>
           {rows && rows.map(function(row) {
             return <TableRow
               key={row.san}
-              displayBorder={true}
-              selectable={true}>
+              displayBorder
+              selectable>
               <TableRowColumn className="center">{row.san}</TableRowColumn>
               <TableRowColumn className="center">{row.votes}</TableRowColumn>
             </TableRow>
@@ -103,8 +103,6 @@ const MoveSuggestions = React.createClass({
         </TableBody>
       </Table>  
     );
-  },
+  }
 
-});
-
-module.exports = MoveSuggestions;
+}

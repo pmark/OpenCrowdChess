@@ -1,40 +1,36 @@
-/** In this file, we create a React component which incorporates components provided by material-ui */
+import React from 'react';
 
-const React = require('react');
-const Table = require('material-ui/lib/table/table');
-const TableBody = require('material-ui/lib/table/table-body');
-const TableFooter = require('material-ui/lib/table/table-footer');
-const TableHeader = require('material-ui/lib/table/table-header');
-const TableHeaderColumn = require('material-ui/lib/table/table-header-column');
-const TableRow = require('material-ui/lib/table/table-row');
-const TableRowColumn = require('material-ui/lib/table/table-row-column');
+import {
+    Table,
+    TableBody,
+    TableRow,
+    TableRowColumn,
+    TableHeader,
+    TableHeaderColumn,
+} from 'material-ui';
 
-const PlayerTable = React.createClass({
+export default class PlayerTable extends React.Component {
 
-  getInitialState () {
-    return { turns: [] };
-  },
-
-  componentDidMount() {
-  },
-
-  componentWillMount() {
-  },
-
-  componentWillUnmount() {
-  },
+  constructor() {
+    super();
+    this.state = { turns: [] };
+  }
 
   onRowSelection(indexes) {
     console.log("onRowSelection", indexes[0]);
-  },
+  }
+
+  static propTypes = {
+    height: React.PropTypes.string,
+  }
 
   render() {
     return (
       <Table
         height={this.props.height}
-        fixedHeader={true}
-        fixedFooter={true}
-        selectable={true}
+        fixedHeader
+        fixedFooter
+        selectable
         multiSelectable={false}
         className='centered-table-text'
         onRowSelection={this.onRowSelection}>
@@ -46,11 +42,11 @@ const PlayerTable = React.createClass({
             <TableHeaderColumn>
               Location
             </TableHeaderColumn>
-           </TableRow>
+          </TableRow>
         </TableHeader>
         <TableBody
-          deselectOnClickaway={true}
-          showRowHover={true}
+          deselectOnClickaway
+          showRowHover
           displayRowCheckbox={false}
           stripedRows={false}>
           <TableRow selected={false}>
@@ -64,8 +60,6 @@ const PlayerTable = React.createClass({
         </TableBody>
       </Table>  
     );
-  },
+  }
 
-});
-
-module.exports = PlayerTable;
+}

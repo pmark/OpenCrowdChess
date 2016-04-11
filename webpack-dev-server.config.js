@@ -17,63 +17,63 @@ var config = {
     modulesDirectories: [
       // path.join(__dirname, '/src/lib'),
       nodeModulesPath,
-      path.join(__dirname, '/src/app')
-    ]
+      path.join(__dirname, '/src/app'),
+    ],
     //node_modules: ["web_modules", "node_modules"]  (Default Settings)
   },
   //Server Configuration options
   devServer:{
     contentBase: 'src/www',  //Relative directory for base of server
-    devtool: 'eval',
+    devtool: 'inline-source-map',
     hot: true,        //Live-reload
     inline: true,
-    port: 3000        //Port Number
+    port: 3000,        //Port Number
   },
-  devtool: 'eval',
+  devtool: 'inline-source-map',
   output: {
     path: buildPath,    //Path of output file
-    filename: 'app.js'
+    filename: 'app.js',
   },
   plugins: [
     //Enables Hot Modules Replacement
     new webpack.HotModuleReplacementPlugin(),
     //Allows error warnings but does not stop compiling. Will remove when eslint is added
     new webpack.NoErrorsPlugin(),
-    //Moves files
+    //Moves files,
     new TransferWebpackPlugin([
-      {from: 'www'}
+      {from: 'www'},
     ], path.resolve(__dirname, "src")),
     new webpack.DefinePlugin({
       'process.env': {
-        'NODE_ENV': '"development"'
-      }
+        'NODE_ENV': '"development"',
+      },
     }),
   ],
   module: {
     //Loaders to interpret non-vanilla javascript code as well as most other extensions including images and text.
-    // preLoaders: [
-    //   {
-    //     //Eslint loader
-    //     test: /\.(js|jsx)$/,
-    //     loader: 'eslint-loader',
-    //     include: [path.resolve(__dirname, "src/app")],
-    //     exclude: [nodeModulesPath]
-    //   },
-    // ],
+    /*
+    preLoaders: [
+      {
+        //Eslint loader
+        test: /\.(js|jsx)$/,
+        loader: 'eslint-loader',
+        include: [path.resolve(__dirname, "src/app")],
+        exclude: [nodeModulesPath],
+      },
+    ],
+    */
     loaders: [
       {
-        //React-hot loader and
         test: /\.(js|jsx)$/,  //All .js and .jsx files
-        loaders: ['react-hot','babel-loader'], //react-hot is like browser sync and babel loads jsx and es6-7
+        loaders: ['react-hot','babel'], //react-hot is like browser sync and babel loads jsx and es6-7
         exclude: [nodeModulesPath]
-      }
-    ]
+      },
+    ],
   },
   //eslint config options. Part of the eslint-loader package
   eslint: {
-    configFile: '.eslintrc'
+    configFile: '.eslintrc',
   },
 };
-
 
 module.exports = config;

@@ -1,9 +1,8 @@
 /** In this file, we create a React component which incorporates components provided by material-ui */
 
+import ChessUtil from '../lib/chess-util';
 const React = require('react');
-const Paper = require('material-ui/lib/paper');
 const Chessmen = require('../lib/unicode-chessmen');
-const ChessUtil = require('../lib/chess-util');
 const Cemetery = React.createClass({
 
   getInitialState () {

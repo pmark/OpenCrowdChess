@@ -1,6 +1,6 @@
 import FirebaseDB from './firebase-db';
-import UUID from './uuid-source';
-import moment from 'moment';
+// import UUID from './uuid-source';
+// import moment from 'moment';
 
 // console.log("firebase FirebaseDB URL:", FirebaseDB.url);
 

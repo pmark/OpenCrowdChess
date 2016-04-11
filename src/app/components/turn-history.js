@@ -1,47 +1,31 @@
-2/** In this file, we create a React component which incorporates components provided by material-ui */
+import React from 'react';
 
-const React = require('react');
-const Table = require('material-ui/lib/table/table');
-const TableBody = require('material-ui/lib/table/table-body');
-const TableFooter = require('material-ui/lib/table/table-footer');
-const TableHeader = require('material-ui/lib/table/table-header');
-const TableHeaderColumn = require('material-ui/lib/table/table-header-column');
-const TableRow = require('material-ui/lib/table/table-row');
-const TableRowColumn = require('material-ui/lib/table/table-row-column');
+import {
+    Table,
+    TableBody,
+    TableRow,
+    TableRowColumn,
+    TableHeader,
+    TableHeaderColumn,
+} from 'material-ui';
 
-const TurnHistoryRow = React.createClass({
-    render: function() {
-        return (
-          <TableRow selected={false} key={this.props.turnNumber}>
-            <TableRowColumn>{this.props.turnNumber}</TableRowColumn>
-            <TableRowColumn>{this.props.white}</TableRowColumn>
-            <TableRowColumn>{this.props.black}</TableRowColumn>
-          </TableRow>
-        );
-    },
-});
+export default class TurnHistory extends React.Component {
 
-const TurnHistory = React.createClass({
+  constructor() {
+    super();
+    this.state = { turns: [] };
+  }
 
-  getInitialState () {
-    return { turns: [] };
-  },
-
-  componentDidMount() {
-  },
-
-  componentWillMount() {
-  },
-
-  componentWillUnmount() {
-  },
+  static propTypes = {
+    sanHistory: React.PropTypes.object,
+    height: React.PropTypes.string,
+  }
 
   onRowSelection(indexes) {
     console.log("history move selected:", indexes[0]);
-  },
+  }
 
   render() {
-
     const moves = [];
     let rows = null;
 
@@ -76,9 +60,9 @@ const TurnHistory = React.createClass({
     return (
       <Table
         height={this.props.height}
-        fixedHeader={true}
-        fixedFooter={true}
-        selectable={true}
+        fixedHeader
+        fixedFooter
+        selectable
         multiSelectable={false}
         className='centered-table-text'
         onRowSelection={this.onRowSelection}>
@@ -93,13 +77,13 @@ const TurnHistory = React.createClass({
             <TableHeaderColumn>
               Black
             </TableHeaderColumn>
-           </TableRow>
+          </TableRow>
         </TableHeader>
         <TableBody
           deselectOnClickaway={false}
-          showRowHover={true}
+          showRowHover
           displayRowCheckbox={false}
-          stripedRows={true}>
+          stripedRows>
           {rows && rows.map(function(item, index) {
             return <TableRow key={item.key}>
               <TableRowColumn>{item.turnNumber}</TableRowColumn>
@@ -110,8 +94,6 @@ const TurnHistory = React.createClass({
         </TableBody>
       </Table>  
     );
-  },
+  }
 
-});
-
-module.exports = TurnHistory;
+}

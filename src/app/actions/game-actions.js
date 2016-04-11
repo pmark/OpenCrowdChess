@@ -1,6 +1,8 @@
 const alt = require('../alt');
-const GameSource = require('../sources/game-source');
-const ChessUtil = require('../lib/chess-util');
+
+import GameSource from '../sources/game-source';
+import ChessUtil from '../lib/chess-util';
+
 
 class GameActions {
 
@@ -38,7 +40,7 @@ class GameActions {
   }
 
   resetGame() {
-    // __board.setPosition(ChessUtils.FEN.startId);
+    // __board.setPosition(ChessUtil.FEN.startId);
     // __chess.reset();
     this.dispatch();
   }
@@ -89,7 +91,7 @@ class GameActions {
     const fen = __chess.fen();
     
     // console.log("fen:", fen)
-    // console.log("position:", __board.getPosition(ChessUtils.NOTATION.id));
+    // console.log("position:", __board.getPosition(ChessUtil.NOTATION.id));
 
     // __chess = __chess || {};
     // __chess.fen = fen;
@@ -112,7 +114,7 @@ class GameActions {
 
     movesNotation = __chess.moves({square: notationSquare, verbose: true});
     for (i = 0; i < movesNotation.length; i++) {
-      movesPosition.push(ChessUtils.convertNotationSquareToIndex(movesNotation[i].to));
+      movesPosition.push(ChessUtil.convertNotationSquareToIndex(movesNotation[i].to));
     }
     return movesPosition;
   }

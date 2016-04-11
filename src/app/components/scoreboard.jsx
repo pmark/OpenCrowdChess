@@ -1,15 +1,15 @@
-const React = require('react');
-const Paper = require('material-ui/lib/paper');
-const AppBar = require('material-ui/lib/app-bar');
-const Clock = require('./clock');
-const Cemetery = require('./cemetery');
-const GameStore = require('../stores/game-store');
+import React from 'react';
 
-const Scoreboard = React.createClass({
+import { AppBar } from 'material-ui';
 
-  contextTypes: {
+// import Clock from './clock';
+import Cemetery from './cemetery';
+
+export default class Scoreboard extends React.Component {
+
+  static contextTypes = {
     game: React.PropTypes.object,
-  },
+  }
 
   render() {
     const capturedPieces = this.context.game.capturedPieces || {};
@@ -52,8 +52,6 @@ const Scoreboard = React.createClass({
 
       </div>
     );
-  },
+  }
 
-});
-
-module.exports = Scoreboard;
+}
