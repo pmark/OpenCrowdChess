@@ -1,38 +1,21 @@
-/** In this file, we create a React component which incorporates components provided by material-ui */
+import React from 'react';
+// import Chessboardjs from 'chessboardjs';
 
-const React = require('react');
-const GameStore = require('../stores/game-store');
-const GameActions = require('../actions/game-actions');
-const Chess = require('../lib/jhlywa-chess').Chess;
-const Paper = require('material-ui/lib/paper');
+// __board is defined globally in chess-game.js 
+// TODO: use Chessboardjs another npm module.
+export default class Chessboard extends React.Component {
 
-const Chessboard = React.createClass({
-
-  getInitialState () {
-    return GameStore.getState();
-  },
+  constructor() {
+    super();
+  }
 
   componentDidMount() {
-  },
-
-  componentWillMount() {
-    GameStore.listen(this.onChange);
-  },
-
-  componentWillUnmount() {
-    GameStore.unlisten(this.onChange);
-  },
-
-  onChange(store) {
-    this.setState(store);
-  },
+  }
 
   render() {
     return (
       <div id={"board"} style={{width: '85%', marginTop:'8px', marginBottom:'8px'}}></div>
     );
-  },
+  }
 
-});
-
-module.exports = Chessboard;
+}

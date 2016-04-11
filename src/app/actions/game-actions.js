@@ -41,7 +41,7 @@ class GameActions {
 
   resetGame() {
     // __board.setPosition(ChessUtil.FEN.startId);
-    // __chess.reset();
+    // window.chess.reset();
     this.dispatch();
   }
 
@@ -63,24 +63,24 @@ class GameActions {
       winner: null,
     };
 
-    let chessMove = __chess.move({
+    let chessMove = window.chess.move({
       from: move.from,
       to: move.to,
       promotion: 'q',
     });
 
-    nextPlayer = (__chess.turn() === 'b' ? 'black' : 'white');
+    nextPlayer = (window.chess.turn() === 'b' ? 'black' : 'white');
 
     if (chessMove !== null) {
-      if (__chess.in_checkmate() === true) {
+      if (window.chess.in_checkmate() === true) {
         status.checkmate = true;
-        status.winner = __chess.turn();
+        status.winner = window.chess.turn();
       }
-      else if (__chess.in_draw() === true) {
+      else if (window.chess.in_draw() === true) {
         status.draw = true;
       }
       else {
-        if (__chess.in_check() === true) {
+        if (window.chess.in_check() === true) {
           status.check = true;
         }
       }
@@ -88,14 +88,14 @@ class GameActions {
 
     console.log('status:', status);
 
-    const fen = __chess.fen();
+    const fen = window.chess.fen();
     
     // console.log("fen:", fen)
     // console.log("position:", __board.getPosition(ChessUtil.NOTATION.id));
 
-    // __chess = __chess || {};
-    // __chess.fen = fen;
-    // __chess.lastMove = chessMove;
+    // window.chess = window.chess || {};
+    // window.chess.fen = fen;
+    // window.chess.lastMove = chessMove;
 
     // TODO: Show move confirmation instead of ending move right away.
     this.actions.endTurn(chessMove, fen, status);
@@ -112,7 +112,7 @@ class GameActions {
       movesNotation,
       movesPosition = [];
 
-    movesNotation = __chess.moves({square: notationSquare, verbose: true});
+    movesNotation = window.chess.moves({square: notationSquare, verbose: true});
     for (i = 0; i < movesNotation.length; i++) {
       movesPosition.push(ChessUtil.convertNotationSquareToIndex(movesNotation[i].to));
     }

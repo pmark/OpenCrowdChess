@@ -1,11 +1,10 @@
 import React from 'react';
 import ChessUtil from '../lib/chess-util';
+import Chess from 'chess.js';
 import { connect } from 'react-redux';
 import { firebase, helpers } from 'redux-react-firebase';
 import SwipeableViews from 'react-swipeable-views';
 
-const { Component, PropTypes } = React;
-const { dataToJS } = helpers;
 
 import {
     RaisedButton,
@@ -28,9 +27,9 @@ import TurnHistory from './turn-history';
 // import Presence from './presence';
 
 // import UUID from '../sources/uuid-source';
-// import Chess from 'chess.js';  // TODO: use npm module
 
 const { getMuiTheme, Colors } = Styles;
+const { dataToJS } = helpers;
 
 const NEXT_GAME_TRANSITION_SEC = 5;
 let nextGameCountdownTicker = null;
@@ -61,12 +60,12 @@ export default class Main extends React.Component {
   }
 
   static propTypes = {
-    gameId: PropTypes.string,
-    game: PropTypes.object,
+    gameId: React.PropTypes.string,
+    game: React.PropTypes.object,
   }
 
   static childContextTypes = {
-    game: PropTypes.object,
+    game: React.PropTypes.object,
   }
 
   getChildContext() {
@@ -97,13 +96,16 @@ export default class Main extends React.Component {
     let fen = null;
     if (game.fenHistory && game.fenHistory.length > 0) {
       fen = game.fenHistory[game.fenHistory.length-1];
-      __chess = new Chess(fen);
+      window.chess = new Chess(fen);
     }
     else {
-      fen = ChessUtils.FEN.startId;
-      __chess = new Chess();
+      fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'; // Chess.ChessUtils.FEN.startId;
+      window.chess = new Chess();
     }
-    __board.setPosition(fen);
+
+    // The client's board should be updated when firebase sends the game update
+    // which will include the latest fen.
+    // __board.setPosition(fen);
 
     if (game.checkmate || game.draw) {
       if (!nextGameCountdownTicker) {
@@ -112,7 +114,8 @@ export default class Main extends React.Component {
     }
   }
 
-  componentWillMount() {
+  componentWillReceiveProps(nextProps) {
+    console.log('Main: next props:', nextProps);
   }
 
   _handleChangeMovesTabIndex(arg) {

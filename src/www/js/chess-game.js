@@ -1,7 +1,5 @@
-// var __chess = new Chess();
-
 var __board = null;
-var __chess = window.chess = new Chess();
+var __chess = window.chess = null;
 
 $(function() {
   __board = new Chessboard('board', {
